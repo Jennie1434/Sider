@@ -285,7 +285,7 @@ function AppContent() {
   }
 
   return (
-    <div className="min-h-screen flex items-center justify-center p-4 sm:p-6 md:p-8 font-sans text-slate-300 relative overflow-hidden">
+    <div className="min-h-screen flex items-center justify-center p-2 sm:p-4 md:p-6 lg:p-8 font-sans text-slate-300 relative overflow-hidden">
       {/* Fond d'écran avec profondeur et lumière */}
       <div className="fixed inset-0 pointer-events-none z-0">
         {/* Fond de base */}
@@ -307,9 +307,9 @@ function AppContent() {
       </div>
       
       {/* Conteneur Central - La Carte Luxueuse */}
-      <div className="relative z-10 w-full max-w-4xl bg-white/[0.02] backdrop-blur-2xl border border-white/[0.08] ring-1 ring-inset ring-white/[0.05] rounded-2xl sm:rounded-[32px] shadow-2xl shadow-black/80 p-6 sm:p-8 md:p-12 lg:p-16 flex flex-col overflow-hidden transition-all duration-500 min-h-[90vh] sm:min-h-auto">
+      <div className="relative z-10 w-full max-w-4xl bg-white/[0.02] backdrop-blur-2xl border border-white/[0.08] ring-1 ring-inset ring-white/[0.05] rounded-xl sm:rounded-2xl md:rounded-[32px] shadow-2xl shadow-black/80 p-4 sm:p-6 md:p-8 lg:p-12 xl:p-16 flex flex-col overflow-hidden transition-all duration-500 h-auto my-2 sm:my-4">
         {/* Header */}
-        <header className="flex flex-row items-center justify-between pb-6 sm:pb-8 md:pb-10 border-b border-white/[0.08]">
+        <header className="flex flex-row items-center justify-between pb-4 sm:pb-6 md:pb-8 lg:pb-10 border-b border-white/[0.08]">
           <div className="text-white font-bold tracking-[0.2em] text-xs sm:text-sm uppercase">
             SIDER
           </div>
@@ -319,20 +319,20 @@ function AppContent() {
         </header>
 
         {/* Contenu Principal */}
-        <main className="flex-1 overflow-hidden pt-6 sm:pt-8 md:pt-10">
+        <main className="flex-1 overflow-y-auto pt-4 sm:pt-6 md:pt-8 lg:pt-10">
           {step === 'welcome' && (
-            <div className="flex-1 flex items-center justify-center py-4 sm:py-8">
-              <div className="text-center max-w-md mx-auto px-4">
-                <h1 className="text-white font-medium text-3xl sm:text-4xl md:text-5xl mb-4 sm:mb-6 tracking-tight">
+            <div className="flex-1 flex items-center justify-center min-h-[calc(100vh-200px)] sm:min-h-[400px] py-4 sm:py-6 md:py-8">
+              <div className="text-center max-w-md mx-auto px-2 sm:px-4 w-full">
+                <h1 className="text-white font-medium text-2xl sm:text-3xl md:text-4xl lg:text-5xl mb-3 sm:mb-4 md:mb-6 tracking-tight">
                   SIDER
                 </h1>
-                <p className="text-slate-400 font-medium text-sm sm:text-base leading-relaxed mb-6 sm:mb-8">
+                <p className="text-slate-400 font-medium text-xs sm:text-sm md:text-base leading-relaxed mb-4 sm:mb-6 md:mb-8 px-2">
                   Analyse de profil technique et créative. 4 modules pour définir votre identité professionnelle.
                 </p>
-                <div className="flex flex-col gap-3 w-full sm:w-auto">
+                <div className="flex flex-col gap-2 sm:gap-3 w-full">
                   <button 
                     onClick={handleStart}
-                    className="bg-white text-black hover:bg-slate-200 transition-colors px-6 sm:px-8 py-3 rounded-lg font-medium text-sm w-full sm:w-auto"
+                    className="bg-white text-black hover:bg-slate-200 active:bg-slate-300 transition-colors px-4 sm:px-6 md:px-8 py-2.5 sm:py-3 rounded-lg font-medium text-xs sm:text-sm w-full touch-manipulation"
                   >
                     INITIALISER LE SYSTÈME
                   </button>
@@ -341,7 +341,7 @@ function AppContent() {
                   {isAdminAuthenticated() && (
                     <button 
                       onClick={() => setStep('admin')}
-                      className="bg-white/5 text-white hover:bg-white/10 border border-white/20 transition-colors px-6 sm:px-8 py-3 rounded-lg font-medium text-sm w-full sm:w-auto"
+                      className="bg-white/5 text-white hover:bg-white/10 active:bg-white/15 border border-white/20 transition-colors px-4 sm:px-6 md:px-8 py-2.5 sm:py-3 rounded-lg font-medium text-xs sm:text-sm w-full touch-manipulation"
                     >
                       📊 ACCÈS ADMIN
                     </button>

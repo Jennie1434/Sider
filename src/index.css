@@ -10,6 +10,8 @@
   html {
     height: 100%;
     overflow-x: hidden;
+    -webkit-text-size-adjust: 100%; /* Empêche le zoom automatique sur iOS */
+    -webkit-tap-highlight-color: transparent;
   }
   
   body {
@@ -23,17 +25,63 @@
     background-color: #0B0C15;
     color: white;
     overflow-x: hidden;
+    position: relative;
+    overflow-y: auto;
+    /* Empêcher le scroll horizontal sur mobile */
+    overscroll-behavior-y: contain;
   }
   
   #root {
     min-height: 100vh;
     width: 100%;
+    display: flex;
+    flex-direction: column;
+    position: relative;
+  }
+  
+  /* Améliorer le touch sur mobile */
+  button, a, [role="button"] {
+    -webkit-tap-highlight-color: transparent;
+    touch-action: manipulation;
+    cursor: pointer;
+  }
+  
+  /* Empêcher le zoom sur double-tap iOS */
+  input, textarea, select {
+    font-size: 16px; /* Évite le zoom automatique sur iOS */
   }
 }
 
 @layer utilities {
   .text-balance {
     text-wrap: balance;
+  }
+  
+  /* Classe utilitaire pour améliorer le touch sur mobile */
+  .touch-manipulation {
+    touch-action: manipulation;
+    -webkit-tap-highlight-color: transparent;
+  }
+}
+
+/* Styles spécifiques pour mobile */
+@media (max-width: 640px) {
+  /* Empêcher le scroll horizontal */
+  * {
+    max-width: 100%;
+  }
+  
+  /* Améliorer le rendu des textes sur mobile */
+  body {
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-rendering: optimizeLegibility;
+  }
+  
+  /* Améliorer les performances de scroll sur mobile */
+  .overflow-y-auto,
+  .overflow-y-scroll {
+    -webkit-overflow-scrolling: touch;
   }
 }
 
