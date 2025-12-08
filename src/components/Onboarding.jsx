@@ -313,19 +313,25 @@ export default function Onboarding({ onComplete }) {
     }
   }, [step]);
 
-  // Passage automatique à l'étape suivante quand une étape est complète
-  // SAUF pour l'étape 3 (spécialités) où on garde le bouton "Suivant"
+  // Passage automatique entre les sous-questions de l'étape 2
   useEffect(() => {
-    // Ne pas passer automatiquement si on est à l'étape 3 (spécialités)
-    if (step === 3) return;
-    
-    // Ne pas passer automatiquement si on est à la dernière étape
-    if (step === 5) return;
-    
-    // Gérer l'étape 2 (sous-questions)
     if (step === 2) {
+      // Si on a sélectionné la classe mais pas encore la filière, passer à la question filière
+      if (formData.classe && step2SubQuestion === 0) {
+        const timer = setTimeout(() => {
+          setStep2SubQuestion(1);
+        }, 600);
+        return () => clearTimeout(timer);
+      }
+      // Si on a sélectionné la filière mais pas encore la moyenne, passer à la question moyenne
+      if (formData.filiere && step2SubQuestion === 1) {
+        const timer = setTimeout(() => {
+          setStep2SubQuestion(2);
+        }, 600);
+        return () => clearTimeout(timer);
+      }
       // Si toutes les sous-questions sont complétées, passer à l'étape suivante
-      if (formData.classe && formData.filiere && formData.moyenne) {
+      if (formData.classe && formData.filiere && formData.moyenne && step2SubQuestion === 2) {
         const timer = setTimeout(() => {
           if (formData.classe === 'Seconde') {
             setShowSecondeMessage(true);
@@ -341,8 +347,20 @@ export default function Onboarding({ onComplete }) {
         }, 800);
         return () => clearTimeout(timer);
       }
-      return;
     }
+  }, [formData.classe, formData.filiere, formData.moyenne, step, step2SubQuestion]);
+
+  // Passage automatique à l'étape suivante quand une étape est complète
+  // SAUF pour l'étape 3 (spécialités) où on garde le bouton "Suivant"
+  useEffect(() => {
+    // Ne pas passer automatiquement si on est à l'étape 3 (spécialités)
+    if (step === 3) return;
+    
+    // Ne pas passer automatiquement si on est à l'étape 2 (géré par le useEffect ci-dessus)
+    if (step === 2) return;
+    
+    // Ne pas passer automatiquement si on est à la dernière étape
+    if (step === 5) return;
     
     // Vérifier si l'étape actuelle est valide
     let isValid = false;

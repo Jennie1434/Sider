@@ -1,4 +1,5 @@
 import { useState, useEffect, useCallback } from 'react';
+import { motion } from 'framer-motion';
 import PhaseIA from './components/profiling/PhaseIA';
 import Onboarding from './components/Onboarding';
 import AdminDashboard from './components/AdminDashboard';
@@ -321,34 +322,65 @@ function AppContent() {
         {/* Contenu Principal - Pas de scroll sur mobile */}
         <main className="flex-1 flex items-center justify-center overflow-hidden pt-2 sm:pt-3 md:pt-4 lg:pt-6">
           {step === 'welcome' && (
-            <div className="flex-1 flex items-center justify-center w-full h-full py-2 sm:py-4">
-              <div className="text-center max-w-md mx-auto px-3 sm:px-4 w-full">
-                <h1 className="text-white font-medium text-3xl sm:text-4xl md:text-5xl lg:text-6xl mb-2 sm:mb-3 md:mb-4 tracking-tight leading-tight">
+            <motion.div 
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.8, ease: "easeOut" }}
+              className="flex-1 flex items-center justify-center w-full h-full py-2 sm:py-4"
+            >
+              <div className="text-center max-w-lg mx-auto px-3 sm:px-4 w-full">
+                {/* Titre avec animation */}
+                <motion.h1 
+                  initial={{ opacity: 0, scale: 0.9 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  transition={{ duration: 0.6, delay: 0.2 }}
+                  className="text-white font-bold text-4xl sm:text-5xl md:text-6xl lg:text-7xl mb-4 sm:mb-5 md:mb-6 tracking-tight leading-tight bg-gradient-to-r from-white via-indigo-200 to-violet-200 bg-clip-text text-transparent"
+                >
                   SIDER
-                </h1>
-                <p className="text-slate-400 font-medium text-sm sm:text-base md:text-lg leading-relaxed mb-3 sm:mb-4 md:mb-6 px-1">
-                  Analyse de profil technique et créative. 4 modules pour définir votre identité professionnelle.
-                </p>
-                <div className="flex flex-col gap-2 sm:gap-3 w-full">
-                  <button 
+                </motion.h1>
+                
+                {/* Description avec animation */}
+                <motion.p 
+                  initial={{ opacity: 0, y: 10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.6, delay: 0.4 }}
+                  className="text-slate-300 font-medium text-base sm:text-lg md:text-xl leading-relaxed mb-6 sm:mb-8 md:mb-10 px-2"
+                >
+                  Analyse de profil technique et créative.<br />
+                  <span className="text-indigo-400">4 modules</span> pour définir votre identité professionnelle.
+                </motion.p>
+                
+                {/* Boutons avec animation */}
+                <motion.div 
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.6, delay: 0.6 }}
+                  className="flex flex-col gap-3 sm:gap-4 w-full"
+                >
+                  <motion.button 
                     onClick={handleStart}
-                    className="bg-white text-black hover:bg-slate-200 active:bg-slate-300 transition-colors px-4 sm:px-6 md:px-8 py-3 sm:py-3.5 md:py-4 rounded-lg font-medium text-sm sm:text-base w-full touch-manipulation shadow-lg"
+                    whileHover={{ scale: 1.02, y: -2 }}
+                    whileTap={{ scale: 0.98 }}
+                    className="bg-gradient-to-r from-indigo-600 via-violet-600 to-purple-600 text-white hover:from-indigo-500 hover:via-violet-500 hover:to-purple-500 active:from-indigo-700 active:via-violet-700 active:to-purple-700 transition-all px-6 sm:px-8 md:px-10 py-4 sm:py-4.5 md:py-5 rounded-xl sm:rounded-2xl font-bold text-base sm:text-lg md:text-xl w-full touch-manipulation shadow-2xl shadow-indigo-500/30 hover:shadow-indigo-500/50"
                   >
                     INITIALISER LE SYSTÈME
-                  </button>
+                  </motion.button>
+                  
                   {/* Bouton admin caché - accessible uniquement via code secret ou URL avec code */}
                   {/* Pour accéder : utiliser l'URL avec ?admin_code=CODE_SECRET ou appuyer sur Ctrl+Shift+A */}
                   {isAdminAuthenticated() && (
-                    <button 
+                    <motion.button 
                       onClick={() => setStep('admin')}
-                      className="bg-white/5 text-white hover:bg-white/10 active:bg-white/15 border border-white/20 transition-colors px-4 sm:px-6 md:px-8 py-3 sm:py-3.5 md:py-4 rounded-lg font-medium text-sm sm:text-base w-full touch-manipulation"
+                      whileHover={{ scale: 1.02 }}
+                      whileTap={{ scale: 0.98 }}
+                      className="bg-white/5 text-white hover:bg-white/10 active:bg-white/15 border-2 border-white/20 hover:border-white/30 transition-all px-4 sm:px-6 md:px-8 py-3 sm:py-3.5 md:py-4 rounded-xl font-semibold text-sm sm:text-base w-full touch-manipulation backdrop-blur-sm"
                     >
                       📊 ACCÈS ADMIN
-                    </button>
+                    </motion.button>
                   )}
-                </div>
+                </motion.div>
               </div>
-            </div>
+            </motion.div>
           )}
 
           {step === 'onboarding' && (
