@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { 
   Rocket,
@@ -79,6 +79,7 @@ const OBJECTIFS = [
 export default function Onboarding({ onComplete }) {
   const { addScore } = useScoring();
   const [step, setStep] = useState(1);
+  const [step2SubQuestion, setStep2SubQuestion] = useState(0); // 0 = classe, 1 = filière, 2 = moyenne
   const [formData, setFormData] = useState({
     prenom: '',
     nom: '',
@@ -117,11 +118,26 @@ export default function Onboarding({ onComplete }) {
   };
 
   // Validation des étapes
+  // Vérifier si la sous-question actuelle de l'étape 2 est valide
+  const isStep2SubQuestionValid = () => {
+    switch (step2SubQuestion) {
+      case 0: // Classe
+        return !!formData.classe;
+      case 1: // Filière
+        return !!formData.filiere;
+      case 2: // Moyenne
+        return !!formData.moyenne;
+      default:
+        return false;
+    }
+  };
+
   const isStepValid = () => {
     switch (step) {
       case 1:
         return formData.prenom.trim() && formData.nom.trim() && formData.email.trim() && isValidEmail(formData.email);
       case 2:
+        // Pour l'étape 2, vérifier si toutes les sous-questions sont complétées
         return formData.classe && formData.filiere && formData.moyenne;
       case 3:
         // Si Seconde, skip automatique (toujours valide)
@@ -159,6 +175,8 @@ export default function Onboarding({ onComplete }) {
         addScore(-prevScore.albert, -prevScore.eugenia, `Classe: ${prevValue} (retiré)`);
       }
       addScore(score.albert, score.eugenia, `Classe: ${value}`);
+      // Passer automatiquement à la question suivante (filière)
+      setTimeout(() => setStep2SubQuestion(1), 300);
     } else if (field === 'filiere' && SCORING_RULES.filiere[value]) {
       const score = SCORING_RULES.filiere[value];
       if (prevValue && SCORING_RULES.filiere[prevValue]) {
@@ -166,6 +184,8 @@ export default function Onboarding({ onComplete }) {
         addScore(-prevScore.albert, -prevScore.eugenia, `Filière: ${prevValue} (retiré)`);
       }
       addScore(score.albert, score.eugenia, `Filière: ${value}`);
+      // Passer automatiquement à la question suivante (moyenne)
+      setTimeout(() => setStep2SubQuestion(2), 300);
     } else if (field === 'moyenne' && SCORING_RULES.moyenne[value]) {
       const score = SCORING_RULES.moyenne[value];
       if (prevValue && SCORING_RULES.moyenne[prevValue]) {
@@ -173,6 +193,8 @@ export default function Onboarding({ onComplete }) {
         addScore(-prevScore.albert, -prevScore.eugenia, `Moyenne: ${prevValue} (retiré)`);
       }
       addScore(score.albert, score.eugenia, `Moyenne: ${value}`);
+      // Toutes les questions de l'étape 2 sont complétées, on peut passer à l'étape suivante
+      // Le bouton "Continuer" apparaîtra automatiquement
     } else if (field === 'options' && SCORING_RULES.options[value]) {
       const score = SCORING_RULES.options[value];
       if (prevValue && SCORING_RULES.options[prevValue]) {
@@ -253,19 +275,49 @@ export default function Onboarding({ onComplete }) {
   };
 
   const handleNext = () => {
-    if (isStepValid() && step < 5) {
-      // Si on est à l'étape 2 et que la classe est "Seconde", skip automatique de l'étape 3
-      if (step === 2 && formData.classe === 'Seconde') {
-        setShowSecondeMessage(true);
-        setTimeout(() => {
-          setShowSecondeMessage(false);
-          setStep(4); // Passer directement à l'étape 4 (Anglais)
-        }, 1500);
+    if (step === 2) {
+      // Si on est à l'étape 2, gérer les sous-questions
+      if (step2SubQuestion < 2) {
+        // Passer à la sous-question suivante
+        setStep2SubQuestion(prev => prev + 1);
       } else {
-        setStep(prev => prev + 1);
+        // Toutes les sous-questions sont complétées, passer à l'étape suivante
+        if (formData.classe === 'Seconde') {
+          setShowSecondeMessage(true);
+          setTimeout(() => {
+            setShowSecondeMessage(false);
+            setStep(4); // Passer directement à l'étape 4 (Anglais)
+            setStep2SubQuestion(0); // Réinitialiser pour la prochaine fois
+          }, 1500);
+        } else {
+          setStep(3);
+          setStep2SubQuestion(0); // Réinitialiser pour la prochaine fois
+        }
+      }
+    } else if (isStepValid() && step < 5) {
+      setStep(prev => prev + 1);
+      // Réinitialiser step2SubQuestion si on quitte l'étape 2
+      if (step === 2) {
+        setStep2SubQuestion(0);
       }
     }
   };
+  
+  // Réinitialiser step2SubQuestion quand on entre dans l'étape 2
+  useEffect(() => {
+    if (step === 2) {
+      // Si on a déjà répondu à toutes les questions, on reste sur la dernière
+      if (formData.classe && formData.filiere && formData.moyenne) {
+        setStep2SubQuestion(2);
+      } else if (formData.classe && formData.filiere) {
+        setStep2SubQuestion(2);
+      } else if (formData.classe) {
+        setStep2SubQuestion(1);
+      } else {
+        setStep2SubQuestion(0);
+      }
+    }
+  }, [step]);
 
   const handleSubmit = () => {
     if (isStepValid()) {
@@ -393,10 +445,10 @@ export default function Onboarding({ onComplete }) {
             </motion.div>
           )}
 
-          {/* ÉTAPE 2 : LE PROFIL SCOLAIRE */}
+          {/* ÉTAPE 2 : LE PROFIL SCOLAIRE - Une question à la fois */}
           {step === 2 && (
             <motion.div
-              key="step2"
+              key={`step2-${step2SubQuestion}`}
               custom={2}
               variants={slideVariants}
               initial="enter"
@@ -406,95 +458,132 @@ export default function Onboarding({ onComplete }) {
               className="w-full h-full flex flex-col"
             >
               <div className="flex-1 flex flex-col justify-center overflow-y-auto px-4 sm:px-0">
-                <div className="space-y-6 sm:space-y-8 md:space-y-10 max-w-2xl mx-auto w-full">
+                <div className="max-w-2xl mx-auto w-full">
                   
-                  {/* 1. Ta Classe Actuelle */}
-                  <div>
-                    <h3 className="block text-base sm:text-lg text-white mb-4 sm:mb-6 font-semibold">
-                      Ta Classe Actuelle ?
-                    </h3>
-                    <div className="flex flex-wrap gap-2 sm:gap-3">
-                      {CLASSES.map((classe) => (
-                        <motion.button
-                          key={classe}
-                          onClick={() => handleSelect('classe', classe)}
-                          whileHover={{ scale: 1.02 }}
-                          whileTap={{ scale: 0.98 }}
-                          className={`px-6 py-3 rounded-full text-sm font-medium transition-all duration-300 ${
-                            formData.classe === classe
-                              ? 'bg-indigo-600 border border-indigo-500 text-white shadow-[0_0_15px_rgba(79,70,229,0.4)]'
-                              : 'bg-white/5 border border-white/10 text-slate-400 hover:bg-white/10'
+                  {/* Indicateur de progression pour l'étape 2 */}
+                  <div className="mb-6 sm:mb-8 text-center">
+                    <div className="flex items-center justify-center gap-2 mb-2">
+                      {[0, 1, 2].map((index) => (
+                        <div
+                          key={index}
+                          className={`h-2 rounded-full transition-all duration-300 ${
+                            index <= step2SubQuestion
+                              ? 'bg-indigo-500 w-8'
+                              : 'bg-white/10 w-2'
                           }`}
-                        >
-                          {classe}
-                        </motion.button>
+                        />
                       ))}
                     </div>
+                    <p className="text-xs text-slate-500">
+                      Question {step2SubQuestion + 1} sur 3
+                    </p>
                   </div>
+
+                  {/* 1. Ta Classe Actuelle */}
+                  {step2SubQuestion === 0 && (
+                    <motion.div
+                      initial={{ opacity: 0, y: 20 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      transition={{ duration: 0.3 }}
+                    >
+                      <h3 className="block text-lg sm:text-xl md:text-2xl text-white mb-6 sm:mb-8 font-semibold text-center">
+                        Ta Classe Actuelle ?
+                      </h3>
+                      <div className="flex flex-wrap gap-3 sm:gap-4 justify-center">
+                        {CLASSES.map((classe) => (
+                          <motion.button
+                            key={classe}
+                            onClick={() => handleSelect('classe', classe)}
+                            whileHover={{ scale: 1.05 }}
+                            whileTap={{ scale: 0.95 }}
+                            className={`px-6 sm:px-8 py-3 sm:py-4 rounded-full text-sm sm:text-base font-medium transition-all duration-300 touch-manipulation ${
+                              formData.classe === classe
+                                ? 'bg-indigo-600 border-2 border-indigo-500 text-white shadow-[0_0_20px_rgba(79,70,229,0.5)]'
+                                : 'bg-white/5 border-2 border-white/10 text-slate-400 hover:bg-white/10 hover:border-white/20'
+                            }`}
+                          >
+                            {classe}
+                          </motion.button>
+                        ))}
+                      </div>
+                    </motion.div>
+                  )}
 
                   {/* 2. Ta Filière / Type de Bac */}
-                  <div>
-                    <h3 className="block text-base sm:text-lg text-white mb-4 sm:mb-6 font-semibold">
-                      Ta Filière / Type de Bac ?
-                    </h3>
-                    <div className="flex flex-wrap gap-2 sm:gap-3">
-                      {FILIERES.map((filiere) => (
-                        <motion.button
-                          key={filiere}
-                          onClick={() => handleSelect('filiere', filiere)}
-                          whileHover={{ scale: 1.02 }}
-                          whileTap={{ scale: 0.98 }}
-                          className={`px-6 py-3 rounded-full text-sm font-medium transition-all duration-300 ${
-                            formData.filiere === filiere
-                              ? 'bg-indigo-600 border border-indigo-500 text-white shadow-[0_0_15px_rgba(79,70,229,0.4)]'
-                              : 'bg-white/5 border border-white/10 text-slate-400 hover:bg-white/10'
-                          }`}
-                        >
-                          {filiere}
-                        </motion.button>
-                      ))}
-                    </div>
-                  </div>
+                  {step2SubQuestion === 1 && (
+                    <motion.div
+                      initial={{ opacity: 0, y: 20 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      transition={{ duration: 0.3 }}
+                    >
+                      <h3 className="block text-lg sm:text-xl md:text-2xl text-white mb-6 sm:mb-8 font-semibold text-center">
+                        Ta Filière / Type de Bac ?
+                      </h3>
+                      <div className="flex flex-wrap gap-3 sm:gap-4 justify-center">
+                        {FILIERES.map((filiere) => (
+                          <motion.button
+                            key={filiere}
+                            onClick={() => handleSelect('filiere', filiere)}
+                            whileHover={{ scale: 1.05 }}
+                            whileTap={{ scale: 0.95 }}
+                            className={`px-6 sm:px-8 py-3 sm:py-4 rounded-full text-sm sm:text-base font-medium transition-all duration-300 touch-manipulation ${
+                              formData.filiere === filiere
+                                ? 'bg-indigo-600 border-2 border-indigo-500 text-white shadow-[0_0_20px_rgba(79,70,229,0.5)]'
+                                : 'bg-white/5 border-2 border-white/10 text-slate-400 hover:bg-white/10 hover:border-white/20'
+                            }`}
+                          >
+                            {filiere}
+                          </motion.button>
+                        ))}
+                      </div>
+                    </motion.div>
+                  )}
 
                   {/* 3. Ta Moyenne Générale estimée */}
-                  <div>
-                    <h3 className="block text-base sm:text-lg text-white mb-4 sm:mb-6 font-semibold">
-                      Ta Moyenne Générale estimée ?
-                    </h3>
-                    <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-4 gap-3 sm:gap-4">
-                      {MOYENNES.map((moyenne) => (
-                        <motion.button
-                          key={moyenne.id}
-                          onClick={() => handleSelect('moyenne', moyenne.id)}
-                          whileHover={{ scale: 1.02, y: -2 }}
-                          whileTap={{ scale: 0.98 }}
-                          className={`relative px-4 py-4 rounded-xl border-2 transition-all duration-300 text-center ${
-                            formData.moyenne === moyenne.id
-                              ? 'border-indigo-400/70 bg-indigo-600/20 text-white shadow-[0_0_20px_rgba(79,70,229,0.3)]'
-                              : 'border-white/10 bg-white/5 text-slate-400 hover:border-white/20 hover:bg-white/10'
-                          }`}
-                        >
-                          <div className="text-xl font-bold mb-1">
-                            {moyenne.label}
-                          </div>
-                          <div className="text-xs text-slate-500">
-                            {moyenne.description}
-                          </div>
-                          {formData.moyenne === moyenne.id && (
-                            <motion.div
-                              initial={{ scale: 0 }}
-                              animate={{ scale: 1 }}
-                              className="absolute top-2 right-2 w-5 h-5 rounded-full bg-indigo-500 flex items-center justify-center"
-                            >
-                              <svg className="w-3 h-3 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M5 13l4 4L19 7" />
-                              </svg>
-                            </motion.div>
-                          )}
-                        </motion.button>
-                      ))}
-                    </div>
-                  </div>
+                  {step2SubQuestion === 2 && (
+                    <motion.div
+                      initial={{ opacity: 0, y: 20 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      transition={{ duration: 0.3 }}
+                    >
+                      <h3 className="block text-lg sm:text-xl md:text-2xl text-white mb-6 sm:mb-8 font-semibold text-center">
+                        Ta Moyenne Générale estimée ?
+                      </h3>
+                      <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-4 gap-3 sm:gap-4">
+                        {MOYENNES.map((moyenne) => (
+                          <motion.button
+                            key={moyenne.id}
+                            onClick={() => handleSelect('moyenne', moyenne.id)}
+                            whileHover={{ scale: 1.05, y: -2 }}
+                            whileTap={{ scale: 0.95 }}
+                            className={`relative px-4 sm:px-6 py-4 sm:py-5 rounded-xl border-2 transition-all duration-300 text-center touch-manipulation ${
+                              formData.moyenne === moyenne.id
+                                ? 'border-indigo-400/70 bg-indigo-600/20 text-white shadow-[0_0_20px_rgba(79,70,229,0.3)]'
+                                : 'border-white/10 bg-white/5 text-slate-400 hover:border-white/20 hover:bg-white/10'
+                            }`}
+                          >
+                            <div className="text-xl sm:text-2xl font-bold mb-1">
+                              {moyenne.label}
+                            </div>
+                            <div className="text-xs sm:text-sm text-slate-500">
+                              {moyenne.description}
+                            </div>
+                            {formData.moyenne === moyenne.id && (
+                              <motion.div
+                                initial={{ scale: 0 }}
+                                animate={{ scale: 1 }}
+                                className="absolute top-2 right-2 w-5 h-5 rounded-full bg-indigo-500 flex items-center justify-center"
+                              >
+                                <svg className="w-3 h-3 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M5 13l4 4L19 7" />
+                                </svg>
+                              </motion.div>
+                            )}
+                          </motion.button>
+                        ))}
+                      </div>
+                    </motion.div>
+                  )}
                 </div>
               </div>
             </motion.div>
@@ -784,15 +873,20 @@ export default function Onboarding({ onComplete }) {
       {/* Bouton de navigation */}
       <div className="mt-6 sm:mt-8 flex justify-center px-4">
         <AnimatePresence>
-          {isStepValid() && (
+          {(step === 2 ? isStep2SubQuestionValid() : isStepValid()) && (
             <motion.button
               initial={{ opacity: 0, y: 10 }}
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: 10 }}
               onClick={step === 5 ? handleSubmit : handleNext}
-              className="w-full sm:w-auto px-6 sm:px-8 py-3 sm:py-4 rounded-xl bg-gradient-to-r from-indigo-600 to-violet-600 text-white font-semibold text-xs sm:text-sm hover:from-indigo-500 hover:to-violet-500 transition-all duration-200 shadow-lg shadow-indigo-500/20"
+              className="w-full sm:w-auto px-6 sm:px-8 py-3 sm:py-4 rounded-xl bg-gradient-to-r from-indigo-600 to-violet-600 text-white font-semibold text-xs sm:text-sm hover:from-indigo-500 hover:to-violet-500 active:from-indigo-700 active:to-violet-700 transition-all duration-200 shadow-lg shadow-indigo-500/20 touch-manipulation"
             >
-              {step === 5 ? 'LANCER LA MISSION 🚀' : 'CONTINUER →'}
+              {step === 5 
+                ? 'LANCER LA MISSION 🚀' 
+                : step === 2 && step2SubQuestion < 2
+                ? 'SUIVANT →'
+                : 'CONTINUER →'
+              }
             </motion.button>
           )}
         </AnimatePresence>
