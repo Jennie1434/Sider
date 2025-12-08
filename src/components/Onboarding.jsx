@@ -459,9 +459,9 @@ export default function Onboarding({ onComplete }) {
             {Math.round((step / 5) * 100)}%
           </span>
         </div>
-        <div className="w-full bg-white/[0.03] rounded-full h-1 sm:h-1.5 overflow-hidden">
+        <div className="w-full bg-white/[0.05] rounded-full h-1.5 sm:h-2 overflow-hidden">
           <motion.div
-            className="h-full bg-gradient-to-r from-slate-300 via-slate-200 to-white shadow-sm"
+            className="h-full bg-gradient-to-r from-violet-500 via-indigo-500 to-purple-500 shadow-lg shadow-violet-500/30"
             initial={{ width: 0 }}
             animate={{ width: `${(step / 5) * 100}%` }}
             transition={{ duration: 0.5, ease: "easeOut" }}
@@ -512,7 +512,7 @@ export default function Onboarding({ onComplete }) {
                       type="text"
                       value={formData.prenom}
                       onChange={(e) => handleInputChange('prenom', e.target.value)}
-                      className="w-full bg-white/[0.03] border border-white/10 rounded-lg p-3.5 sm:p-4 text-white text-base sm:text-lg focus:border-white/30 focus:bg-white/[0.05] transition-all outline-none placeholder:text-slate-500/60"
+                      className="w-full bg-white/[0.05] border border-white/20 rounded-lg p-3.5 sm:p-4 text-white text-base sm:text-lg focus:border-violet-400/50 focus:bg-violet-500/10 focus:ring-1 focus:ring-violet-500/30 transition-all outline-none placeholder:text-slate-500/60"
                       style={{ fontFamily: 'system-ui, -apple-system, sans-serif', fontWeight: 300 }}
                       placeholder="Ton prénom"
                       autoFocus
@@ -527,7 +527,7 @@ export default function Onboarding({ onComplete }) {
                       type="text"
                       value={formData.nom}
                       onChange={(e) => handleInputChange('nom', e.target.value)}
-                      className="w-full bg-white/[0.03] border border-white/10 rounded-lg p-3.5 sm:p-4 text-white text-base sm:text-lg focus:border-white/30 focus:bg-white/[0.05] transition-all outline-none placeholder:text-slate-500/60"
+                      className="w-full bg-white/[0.05] border border-white/20 rounded-lg p-3.5 sm:p-4 text-white text-base sm:text-lg focus:border-violet-400/50 focus:bg-violet-500/10 focus:ring-1 focus:ring-violet-500/30 transition-all outline-none placeholder:text-slate-500/60"
                       style={{ fontFamily: 'system-ui, -apple-system, sans-serif', fontWeight: 300 }}
                       placeholder="Ton nom"
                     />
@@ -541,7 +541,7 @@ export default function Onboarding({ onComplete }) {
                       type="email"
                       value={formData.email}
                       onChange={(e) => handleInputChange('email', e.target.value)}
-                      className="w-full bg-white/[0.03] border border-white/10 rounded-lg p-3.5 sm:p-4 text-white text-base sm:text-lg focus:border-white/30 focus:bg-white/[0.05] transition-all outline-none placeholder:text-slate-500/60"
+                      className="w-full bg-white/[0.05] border border-white/20 rounded-lg p-3.5 sm:p-4 text-white text-base sm:text-lg focus:border-violet-400/50 focus:bg-violet-500/10 focus:ring-1 focus:ring-violet-500/30 transition-all outline-none placeholder:text-slate-500/60"
                       style={{ fontFamily: 'system-ui, -apple-system, sans-serif', fontWeight: 300 }}
                       placeholder="ton.email@exemple.com"
                     />
@@ -577,9 +577,9 @@ export default function Onboarding({ onComplete }) {
                           key={index}
                           className={`h-1.5 sm:h-2 rounded-full transition-all duration-300 ${
                             index < step2SubQuestion
-                              ? 'bg-white w-8 sm:w-10'
+                              ? 'bg-violet-500 w-8 sm:w-10 shadow-sm shadow-violet-500/30'
                               : index === step2SubQuestion
-                              ? 'bg-white w-8 sm:w-10 ring-1 ring-white/30'
+                              ? 'bg-violet-400 w-8 sm:w-10 ring-1 ring-violet-400/50 shadow-sm shadow-violet-400/30'
                               : 'bg-white/20 w-2 sm:w-2.5'
                           }`}
                         />
@@ -608,10 +608,10 @@ export default function Onboarding({ onComplete }) {
                             onClick={() => handleSelect('classe', classe)}
                             whileHover={{ scale: 1.02, y: -1 }}
                             whileTap={{ scale: 0.98 }}
-                            className={`px-5 sm:px-7 md:px-9 py-3 sm:py-3.5 md:py-4 rounded-lg text-sm sm:text-base md:text-lg transition-all duration-300 touch-manipulation ${
+                            className={`px-5 sm:px-7 md:px-9 py-3 sm:py-3.5 md:py-4 rounded-lg text-sm sm:text-base md:text-lg transition-all duration-300 touch-manipulation border ${
                               formData.classe === classe
-                                ? 'bg-white text-[#0B0C15] border border-white/20 shadow-sm'
-                                : 'bg-white/[0.03] border border-white/10 text-slate-300 hover:bg-white/[0.06] hover:border-white/20 hover:text-white'
+                                ? 'bg-gradient-to-r from-violet-600 to-indigo-600 border-violet-400/50 text-white shadow-lg shadow-violet-500/40'
+                                : 'bg-white/[0.05] border-white/20 text-slate-300 hover:bg-violet-500/10 hover:border-violet-400/30 hover:text-white'
                             }`}
                             style={{ fontFamily: 'system-ui, -apple-system, sans-serif', fontWeight: 400 }}
                           >
@@ -640,10 +640,10 @@ export default function Onboarding({ onComplete }) {
                             onClick={() => handleSelect('filiere', filiere)}
                             whileHover={{ scale: 1.02, y: -1 }}
                             whileTap={{ scale: 0.98 }}
-                            className={`px-5 sm:px-7 md:px-9 py-3 sm:py-3.5 md:py-4 rounded-lg text-sm sm:text-base md:text-lg transition-all duration-300 touch-manipulation ${
+                            className={`px-5 sm:px-7 md:px-9 py-3 sm:py-3.5 md:py-4 rounded-lg text-sm sm:text-base md:text-lg transition-all duration-300 touch-manipulation border ${
                               formData.filiere === filiere
-                                ? 'bg-white text-[#0B0C15] border border-white/20 shadow-sm'
-                                : 'bg-white/[0.03] border border-white/10 text-slate-300 hover:bg-white/[0.06] hover:border-white/20 hover:text-white'
+                                ? 'bg-gradient-to-r from-violet-600 to-indigo-600 border-violet-400/50 text-white shadow-lg shadow-violet-500/40'
+                                : 'bg-white/[0.05] border-white/20 text-slate-300 hover:bg-violet-500/10 hover:border-violet-400/30 hover:text-white'
                             }`}
                             style={{ fontFamily: 'system-ui, -apple-system, sans-serif', fontWeight: 400 }}
                           >
@@ -674,8 +674,8 @@ export default function Onboarding({ onComplete }) {
                             whileTap={{ scale: 0.98 }}
                             className={`relative px-4 sm:px-5 md:px-6 py-4 sm:py-5 md:py-6 rounded-lg border transition-all duration-300 text-center touch-manipulation ${
                               formData.moyenne === moyenne.id
-                                ? 'border-white/30 bg-white text-[#0B0C15] shadow-sm'
-                                : 'border-white/10 bg-white/[0.03] text-slate-300 hover:border-white/20 hover:bg-white/[0.06] hover:text-white'
+                                ? 'border-violet-400/50 bg-gradient-to-br from-violet-600/40 to-indigo-600/40 text-white shadow-lg shadow-violet-500/30'
+                                : 'border-white/10 bg-white/[0.05] text-slate-300 hover:border-violet-400/30 hover:bg-violet-500/10 hover:text-white'
                             }`}
                             style={{ fontFamily: 'system-ui, -apple-system, sans-serif' }}
                           >
@@ -767,10 +767,10 @@ export default function Onboarding({ onComplete }) {
                                 disabled={isMaxReached && !isTechnoPro()}
                                 className={`px-4 sm:px-5 md:px-7 py-2.5 sm:py-3 md:py-3.5 rounded-lg text-xs sm:text-sm md:text-base transition-all duration-300 touch-manipulation border ${
                                   isSelected
-                                    ? 'bg-white text-[#0B0C15] border-white/20 shadow-sm'
+                                    ? 'bg-gradient-to-r from-violet-600 to-indigo-600 border-violet-400/50 text-white shadow-lg shadow-violet-500/40'
                                     : isMaxReached && !isTechnoPro()
                                     ? 'bg-white/[0.02] border-white/5 text-slate-500/50 cursor-not-allowed opacity-40'
-                                    : 'bg-white/[0.03] border-white/10 text-slate-300 hover:bg-white/[0.06] hover:border-white/20 hover:text-white'
+                                    : 'bg-white/[0.05] border-white/20 text-slate-300 hover:bg-violet-500/10 hover:border-violet-400/30 hover:text-white'
                                 }`}
                                 style={{ fontFamily: 'system-ui, -apple-system, sans-serif', fontWeight: 400 }}
                               >
@@ -818,8 +818,8 @@ export default function Onboarding({ onComplete }) {
                                 whileTap={{ scale: 0.98 }}
                                 className={`px-4 sm:px-5 md:px-7 py-2.5 sm:py-3 md:py-3.5 rounded-lg text-xs sm:text-sm md:text-base transition-all duration-300 touch-manipulation border ${
                                   isSelected
-                                    ? 'bg-white text-[#0B0C15] border-white/20 shadow-sm'
-                                    : 'bg-white/[0.03] border-white/10 text-slate-300 hover:bg-white/[0.06] hover:border-white/20 hover:text-white'
+                                    ? 'bg-gradient-to-r from-violet-600 to-indigo-600 border-violet-400/50 text-white shadow-lg shadow-violet-500/40'
+                                    : 'bg-white/[0.05] border-white/20 text-slate-300 hover:bg-violet-500/10 hover:border-violet-400/30 hover:text-white'
                                 }`}
                                 style={{ fontFamily: 'system-ui, -apple-system, sans-serif', fontWeight: 400 }}
                               >
@@ -833,7 +833,7 @@ export default function Onboarding({ onComplete }) {
                           onClick={handleNoOption}
                           whileHover={{ scale: 1.01, y: -1 }}
                           whileTap={{ scale: 0.98 }}
-                          className="w-full sm:w-auto mx-auto block px-6 sm:px-8 md:px-10 py-3 sm:py-3.5 md:py-4 rounded-lg bg-white/[0.03] border border-white/10 text-slate-300 hover:bg-white/[0.06] hover:border-white/20 hover:text-white text-sm sm:text-base md:text-lg transition-all duration-300 touch-manipulation"
+                          className="w-full sm:w-auto mx-auto block px-6 sm:px-8 md:px-10 py-3 sm:py-3.5 md:py-4 rounded-lg bg-white/[0.05] border border-white/20 text-slate-300 hover:bg-violet-500/10 hover:border-violet-400/30 hover:text-white text-sm sm:text-base md:text-lg transition-all duration-300 touch-manipulation"
                           style={{ fontFamily: 'system-ui, -apple-system, sans-serif', fontWeight: 400 }}
                         >
                           Pas d'option
@@ -882,34 +882,34 @@ export default function Onboarding({ onComplete }) {
                           whileTap={{ scale: 0.98 }}
                           className={`relative p-4 sm:p-5 md:p-6 rounded-lg border transition-all duration-300 text-left touch-manipulation ${
                             isSelected
-                              ? 'bg-white text-[#0B0C15] border-white/30 shadow-sm'
-                              : 'bg-white/[0.03] border-white/10 hover:bg-white/[0.06] hover:border-white/20'
+                              ? 'bg-gradient-to-br from-violet-600/40 to-indigo-600/40 border-violet-400/50 text-white shadow-lg shadow-violet-500/30'
+                              : 'bg-white/[0.05] border-white/20 hover:bg-violet-500/10 hover:border-violet-400/30'
                           }`}
                           style={{ fontFamily: 'system-ui, -apple-system, sans-serif' }}
                         >
                           <div className="flex items-start space-x-3 sm:space-x-4">
                             <div className={`p-3 sm:p-3.5 md:p-4 rounded-lg flex-shrink-0 ${
                               isSelected 
-                                ? 'bg-[#0B0C15]/10' 
+                                ? 'bg-violet-500/30 shadow-lg shadow-violet-500/50' 
                                 : 'bg-white/5'
                             }`}>
                               <Languages className={`w-5 h-5 sm:w-6 sm:h-6 md:w-7 md:h-7 ${
-                                isSelected ? 'text-[#0B0C15]' : 'text-slate-400'
+                                isSelected ? 'text-violet-200' : 'text-slate-400'
                               }`} strokeWidth={1.5} />
                             </div>
                             <div className="flex-1 min-w-0">
                               <div className={`text-base sm:text-lg md:text-xl mb-1 sm:mb-2 ${
-                                isSelected ? 'text-[#0B0C15]' : 'text-slate-200'
+                                isSelected ? 'text-white' : 'text-slate-200'
                               }`} style={{ fontFamily: 'system-ui, -apple-system, sans-serif', fontWeight: 400 }}>
                                 {level.label}
                               </div>
                               <div className={`text-xs sm:text-sm md:text-base mb-1.5 sm:mb-2 ${
-                                isSelected ? 'text-[#0B0C15]/70' : 'text-slate-400'
+                                isSelected ? 'text-violet-200' : 'text-slate-400'
                               }`} style={{ fontFamily: 'system-ui, -apple-system, sans-serif', fontWeight: 400 }}>
                                 {level.subtitle}
                               </div>
                               <div className={`text-xs sm:text-sm ${
-                                isSelected ? 'text-[#0B0C15]/60' : 'text-slate-500'
+                                isSelected ? 'text-slate-300' : 'text-slate-500'
                               }`} style={{ fontFamily: 'system-ui, -apple-system, sans-serif', fontWeight: 300 }}>
                                 {level.description}
                               </div>
@@ -919,7 +919,7 @@ export default function Onboarding({ onComplete }) {
                             <motion.div
                               initial={{ scale: 0 }}
                               animate={{ scale: 1 }}
-                              className="absolute top-3 right-3 w-5 h-5 rounded-full bg-[#0B0C15] flex items-center justify-center"
+                              className="absolute top-3 right-3 w-5 h-5 rounded-full bg-violet-500 flex items-center justify-center shadow-lg shadow-violet-500/50"
                             >
                               <svg className="w-3 h-3 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M5 13l4 4L19 7" />
@@ -967,23 +967,23 @@ export default function Onboarding({ onComplete }) {
                           whileTap={{ scale: 0.98 }}
                           className={`relative p-5 sm:p-6 md:p-8 lg:p-10 rounded-lg border transition-all duration-300 touch-manipulation ${
                             isSelected
-                              ? 'bg-white text-[#0B0C15] border-white/30 shadow-sm'
-                              : 'bg-white/[0.03] border-white/10 hover:bg-white/[0.06] hover:border-white/20'
+                              ? 'bg-gradient-to-br from-violet-600/40 to-indigo-600/40 border-violet-400/50 text-white shadow-lg shadow-violet-500/30'
+                              : 'bg-white/[0.05] border-white/20 hover:bg-violet-500/10 hover:border-violet-400/30'
                           }`}
                           style={{ fontFamily: 'system-ui, -apple-system, sans-serif' }}
                         >
                           <div className="flex flex-col items-center text-center space-y-3 sm:space-y-4 md:space-y-5">
                             <div className={`p-4 sm:p-5 md:p-6 rounded-lg ${
                               isSelected 
-                                ? 'bg-[#0B0C15]/10' 
+                                ? 'bg-violet-500/30 shadow-lg shadow-violet-500/50' 
                                 : 'bg-white/5'
                             }`}>
                               <Icon className={`w-7 h-7 sm:w-8 sm:h-8 md:w-10 md:h-10 ${
-                                isSelected ? 'text-[#0B0C15]' : 'text-slate-400'
+                                isSelected ? 'text-violet-200' : 'text-slate-400'
                               }`} strokeWidth={1.5} />
                             </div>
                             <span className={`text-sm sm:text-base md:text-lg ${
-                              isSelected ? 'text-[#0B0C15]' : 'text-slate-300'
+                              isSelected ? 'text-white' : 'text-slate-300'
                             }`} style={{ fontFamily: 'system-ui, -apple-system, sans-serif', fontWeight: 400 }}>
                               {obj.label}
                             </span>
@@ -1033,7 +1033,7 @@ export default function Onboarding({ onComplete }) {
               whileHover={{ scale: 1.02, y: -2 }}
               whileTap={{ scale: 0.98 }}
               onClick={handleSubmit}
-              className="w-full sm:w-auto px-6 sm:px-8 md:px-10 py-3 sm:py-3.5 md:py-4 rounded-lg bg-white text-[#0B0C15] hover:bg-white/95 active:bg-white/90 transition-all duration-200 shadow-sm hover:shadow-md touch-manipulation"
+              className="w-full sm:w-auto px-6 sm:px-8 md:px-10 py-3 sm:py-3.5 md:py-4 rounded-lg bg-gradient-to-r from-violet-600 to-indigo-600 text-white hover:from-violet-500 hover:to-indigo-500 active:from-violet-700 active:to-indigo-700 transition-all duration-200 shadow-lg shadow-violet-500/40 hover:shadow-xl hover:shadow-violet-500/50 touch-manipulation"
               style={{ fontFamily: 'system-ui, -apple-system, sans-serif', fontWeight: 400, letterSpacing: '0.05em' }}
             >
               🚀 LANCER LA MISSION
