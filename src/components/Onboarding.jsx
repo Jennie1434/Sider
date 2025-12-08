@@ -1013,32 +1013,20 @@ export default function Onboarding({ onComplete }) {
         )}
       </AnimatePresence>
 
-      {/* Bouton de navigation - Design moderne et visible */}
-      {/* Afficher le bouton seulement pour :
-          - Étape 2 (sous-questions)
-          - Étape 3 (spécialités - option supplémentaire possible)
-          - Étape 5 (soumission finale)
-      */}
+      {/* Bouton de navigation - Uniquement pour la soumission finale */}
       <div className="mt-4 sm:mt-5 md:mt-6 flex justify-center px-3 sm:px-4 flex-shrink-0">
         <AnimatePresence>
-          {((step === 2 && isStep2SubQuestionValid()) || (step === 5 && isStepValid())) && (
+          {step === 5 && isStepValid() && (
             <motion.button
               initial={{ opacity: 0, y: 10, scale: 0.95 }}
               animate={{ opacity: 1, y: 0, scale: 1 }}
               exit={{ opacity: 0, y: 10, scale: 0.95 }}
               whileHover={{ scale: 1.02, y: -2 }}
               whileTap={{ scale: 0.98 }}
-              onClick={step === 5 ? handleSubmit : handleNext}
+              onClick={handleSubmit}
               className="w-full sm:w-auto px-6 sm:px-8 md:px-10 py-3 sm:py-3.5 md:py-4 rounded-xl sm:rounded-2xl bg-gradient-to-r from-indigo-600 via-violet-600 to-purple-600 text-white font-bold text-sm sm:text-base hover:from-indigo-500 hover:via-violet-500 hover:to-purple-500 active:from-indigo-700 active:via-violet-700 active:to-purple-700 transition-all duration-200 shadow-xl shadow-indigo-500/30 hover:shadow-2xl hover:shadow-indigo-500/50 touch-manipulation"
             >
-              {step === 5 
-                ? '🚀 LANCER LA MISSION' 
-                : step === 2 && step2SubQuestion < 2
-                ? 'SUIVANT →'
-                : step === 3
-                ? 'CONTINUER →'
-                : 'CONTINUER →'
-              }
+              🚀 LANCER LA MISSION
             </motion.button>
           )}
         </AnimatePresence>
