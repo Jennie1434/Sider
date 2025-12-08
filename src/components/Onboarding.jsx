@@ -342,18 +342,18 @@ export default function Onboarding({ onComplete }) {
   };
 
   return (
-    <div className="w-full h-full flex flex-col font-sans">
-      {/* Barre de progression */}
-      <div className="mb-8">
-        <div className="flex items-center justify-between mb-3">
-          <span className="text-xs text-slate-500 uppercase tracking-wider font-medium">
+    <div className="w-full h-full flex flex-col font-sans overflow-hidden">
+      {/* Barre de progression - Compact sur mobile */}
+      <div className="mb-2 sm:mb-4 md:mb-6 flex-shrink-0">
+        <div className="flex items-center justify-between mb-1 sm:mb-2">
+          <span className="text-[10px] sm:text-xs text-slate-500 uppercase tracking-wider font-medium">
             Étape {step}/5
           </span>
-          <span className="text-xs text-slate-500 font-medium">
+          <span className="text-[10px] sm:text-xs text-slate-500 font-medium">
             {Math.round((step / 5) * 100)}%
           </span>
         </div>
-        <div className="w-full bg-white/10 rounded-full h-1 overflow-hidden">
+        <div className="w-full bg-white/10 rounded-full h-0.5 sm:h-1 overflow-hidden">
           <motion.div
             className="h-full bg-gradient-to-r from-indigo-500 to-violet-500"
             initial={{ width: 0 }}
@@ -363,8 +363,8 @@ export default function Onboarding({ onComplete }) {
         </div>
       </div>
 
-      {/* Contenu des étapes */}
-      <div className="flex-1 overflow-hidden relative">
+      {/* Contenu des étapes - Pas de scroll, tout visible */}
+      <div className="flex-1 overflow-hidden relative min-h-0">
         <AnimatePresence mode="wait" custom={step}>
           {/* ÉTAPE 1 : IDENTITÉ */}
           {step === 1 && (
@@ -378,7 +378,7 @@ export default function Onboarding({ onComplete }) {
               transition={{ duration: 0.4, ease: "easeInOut" }}
               className="w-full h-full flex flex-col"
             >
-              <div className="flex-1 flex flex-col justify-center">
+              <div className="flex-1 flex flex-col justify-center overflow-hidden">
                 {/* Animation "Salut [Prénom]" */}
                 <AnimatePresence>
                   {formData.prenom.trim() && (
@@ -387,9 +387,9 @@ export default function Onboarding({ onComplete }) {
                       animate={{ opacity: 1, y: 0 }}
                       exit={{ opacity: 0, y: -20 }}
                       transition={{ duration: 0.3, ease: "easeOut" }}
-                      className="mb-8 text-center"
+                      className="mb-3 sm:mb-4 md:mb-6 text-center"
                     >
-                      <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-white to-slate-400" style={{ fontFamily: 'Inter, sans-serif' }}>
+                      <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-white to-slate-400" style={{ fontFamily: 'Inter, sans-serif' }}>
                         Salut {formData.prenom} 👋
                       </h2>
                     </motion.div>
@@ -397,7 +397,7 @@ export default function Onboarding({ onComplete }) {
                 </AnimatePresence>
 
                 {/* Champs de formulaire */}
-                <div className="space-y-4 sm:space-y-6 max-w-md mx-auto w-full px-4 sm:px-0">
+                <div className="space-y-3 sm:space-y-4 md:space-y-6 max-w-md mx-auto w-full px-2 sm:px-4">
                   <div>
                     <label className="block text-xs sm:text-sm text-slate-400 mb-2 font-medium">
                       Prénom *
@@ -457,24 +457,24 @@ export default function Onboarding({ onComplete }) {
               transition={{ duration: 0.4, ease: "easeInOut" }}
               className="w-full h-full flex flex-col"
             >
-              <div className="flex-1 flex flex-col justify-center overflow-y-auto px-4 sm:px-0">
+              <div className="flex-1 flex flex-col justify-center overflow-hidden px-2 sm:px-4">
                 <div className="max-w-2xl mx-auto w-full">
                   
-                  {/* Indicateur de progression pour l'étape 2 */}
-                  <div className="mb-6 sm:mb-8 text-center">
-                    <div className="flex items-center justify-center gap-2 mb-2">
+                  {/* Indicateur de progression pour l'étape 2 - Compact */}
+                  <div className="mb-3 sm:mb-4 md:mb-6 text-center">
+                    <div className="flex items-center justify-center gap-1.5 sm:gap-2 mb-1 sm:mb-2">
                       {[0, 1, 2].map((index) => (
                         <div
                           key={index}
-                          className={`h-2 rounded-full transition-all duration-300 ${
+                          className={`h-1.5 sm:h-2 rounded-full transition-all duration-300 ${
                             index <= step2SubQuestion
-                              ? 'bg-indigo-500 w-8'
-                              : 'bg-white/10 w-2'
+                              ? 'bg-indigo-500 w-6 sm:w-8'
+                              : 'bg-white/10 w-1.5 sm:w-2'
                           }`}
                         />
                       ))}
                     </div>
-                    <p className="text-xs text-slate-500">
+                    <p className="text-[10px] sm:text-xs text-slate-500">
                       Question {step2SubQuestion + 1} sur 3
                     </p>
                   </div>
@@ -485,18 +485,19 @@ export default function Onboarding({ onComplete }) {
                       initial={{ opacity: 0, y: 20 }}
                       animate={{ opacity: 1, y: 0 }}
                       transition={{ duration: 0.3 }}
+                      className="flex flex-col justify-center h-full"
                     >
-                      <h3 className="block text-lg sm:text-xl md:text-2xl text-white mb-6 sm:mb-8 font-semibold text-center">
+                      <h3 className="block text-base sm:text-lg md:text-xl lg:text-2xl text-white mb-3 sm:mb-4 md:mb-6 font-semibold text-center">
                         Ta Classe Actuelle ?
                       </h3>
-                      <div className="flex flex-wrap gap-3 sm:gap-4 justify-center">
+                      <div className="flex flex-wrap gap-2 sm:gap-3 justify-center">
                         {CLASSES.map((classe) => (
                           <motion.button
                             key={classe}
                             onClick={() => handleSelect('classe', classe)}
                             whileHover={{ scale: 1.05 }}
                             whileTap={{ scale: 0.95 }}
-                            className={`px-6 sm:px-8 py-3 sm:py-4 rounded-full text-sm sm:text-base font-medium transition-all duration-300 touch-manipulation ${
+                            className={`px-4 sm:px-6 md:px-8 py-2 sm:py-2.5 md:py-3 rounded-full text-xs sm:text-sm md:text-base font-medium transition-all duration-300 touch-manipulation ${
                               formData.classe === classe
                                 ? 'bg-indigo-600 border-2 border-indigo-500 text-white shadow-[0_0_20px_rgba(79,70,229,0.5)]'
                                 : 'bg-white/5 border-2 border-white/10 text-slate-400 hover:bg-white/10 hover:border-white/20'
@@ -515,18 +516,19 @@ export default function Onboarding({ onComplete }) {
                       initial={{ opacity: 0, y: 20 }}
                       animate={{ opacity: 1, y: 0 }}
                       transition={{ duration: 0.3 }}
+                      className="flex flex-col justify-center h-full"
                     >
-                      <h3 className="block text-lg sm:text-xl md:text-2xl text-white mb-6 sm:mb-8 font-semibold text-center">
+                      <h3 className="block text-base sm:text-lg md:text-xl lg:text-2xl text-white mb-3 sm:mb-4 md:mb-6 font-semibold text-center">
                         Ta Filière / Type de Bac ?
                       </h3>
-                      <div className="flex flex-wrap gap-3 sm:gap-4 justify-center">
+                      <div className="flex flex-wrap gap-2 sm:gap-3 justify-center">
                         {FILIERES.map((filiere) => (
                           <motion.button
                             key={filiere}
                             onClick={() => handleSelect('filiere', filiere)}
                             whileHover={{ scale: 1.05 }}
                             whileTap={{ scale: 0.95 }}
-                            className={`px-6 sm:px-8 py-3 sm:py-4 rounded-full text-sm sm:text-base font-medium transition-all duration-300 touch-manipulation ${
+                            className={`px-4 sm:px-6 md:px-8 py-2 sm:py-2.5 md:py-3 rounded-full text-xs sm:text-sm md:text-base font-medium transition-all duration-300 touch-manipulation ${
                               formData.filiere === filiere
                                 ? 'bg-indigo-600 border-2 border-indigo-500 text-white shadow-[0_0_20px_rgba(79,70,229,0.5)]'
                                 : 'bg-white/5 border-2 border-white/10 text-slate-400 hover:bg-white/10 hover:border-white/20'
@@ -545,27 +547,28 @@ export default function Onboarding({ onComplete }) {
                       initial={{ opacity: 0, y: 20 }}
                       animate={{ opacity: 1, y: 0 }}
                       transition={{ duration: 0.3 }}
+                      className="flex flex-col justify-center h-full"
                     >
-                      <h3 className="block text-lg sm:text-xl md:text-2xl text-white mb-6 sm:mb-8 font-semibold text-center">
+                      <h3 className="block text-base sm:text-lg md:text-xl lg:text-2xl text-white mb-3 sm:mb-4 md:mb-6 font-semibold text-center">
                         Ta Moyenne Générale estimée ?
                       </h3>
-                      <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-4 gap-3 sm:gap-4">
+                      <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-4 gap-2 sm:gap-3">
                         {MOYENNES.map((moyenne) => (
                           <motion.button
                             key={moyenne.id}
                             onClick={() => handleSelect('moyenne', moyenne.id)}
                             whileHover={{ scale: 1.05, y: -2 }}
                             whileTap={{ scale: 0.95 }}
-                            className={`relative px-4 sm:px-6 py-4 sm:py-5 rounded-xl border-2 transition-all duration-300 text-center touch-manipulation ${
+                            className={`relative px-3 sm:px-4 md:px-6 py-3 sm:py-3.5 md:py-4 rounded-xl border-2 transition-all duration-300 text-center touch-manipulation ${
                               formData.moyenne === moyenne.id
                                 ? 'border-indigo-400/70 bg-indigo-600/20 text-white shadow-[0_0_20px_rgba(79,70,229,0.3)]'
                                 : 'border-white/10 bg-white/5 text-slate-400 hover:border-white/20 hover:bg-white/10'
                             }`}
                           >
-                            <div className="text-xl sm:text-2xl font-bold mb-1">
+                            <div className="text-lg sm:text-xl md:text-2xl font-bold mb-0.5 sm:mb-1">
                               {moyenne.label}
                             </div>
-                            <div className="text-xs sm:text-sm text-slate-500">
+                            <div className="text-[10px] sm:text-xs text-slate-500">
                               {moyenne.description}
                             </div>
                             {formData.moyenne === moyenne.id && (
@@ -601,8 +604,8 @@ export default function Onboarding({ onComplete }) {
               transition={{ duration: 0.4, ease: "easeInOut" }}
               className="w-full h-full flex flex-col"
             >
-              <div className="flex-1 flex flex-col justify-center overflow-y-auto px-4 sm:px-0">
-                <div className="space-y-6 sm:space-y-8 max-w-2xl mx-auto w-full">
+              <div className="flex-1 flex flex-col justify-center overflow-hidden px-2 sm:px-4">
+                <div className="space-y-3 sm:space-y-4 md:space-y-6 max-w-2xl mx-auto w-full">
                   
                   {/* Alerte pour Terminale */}
                   <AnimatePresence>
@@ -611,9 +614,9 @@ export default function Onboarding({ onComplete }) {
                         initial={{ opacity: 0, y: -10 }}
                         animate={{ opacity: 1, y: 0 }}
                         exit={{ opacity: 0, y: -10 }}
-                        className="bg-amber-500/20 border border-amber-500/50 rounded-xl p-3 sm:p-4 text-center"
+                        className="bg-amber-500/20 border border-amber-500/50 rounded-xl p-2 sm:p-3 text-center"
                       >
-                        <p className="text-xs sm:text-sm text-amber-300">
+                        <p className="text-[10px] sm:text-xs text-amber-300">
                           En Terminale, on ne garde que 2 spés !
                         </p>
                       </motion.div>
@@ -622,13 +625,13 @@ export default function Onboarding({ onComplete }) {
 
                   {/* Spécialités principales ou Séries Techno/Pro */}
                   <div>
-                    <label className="block text-base sm:text-lg text-white mb-4 sm:mb-6 font-semibold">
+                    <label className="block text-sm sm:text-base md:text-lg text-white mb-2 sm:mb-3 md:mb-4 font-semibold text-center">
                       {isTechnoPro() 
                         ? 'Quelle est ta série ?'
                         : `Quelles sont tes spécialités ? (${getRequiredSpecsCount()} requises)`
                       }
                     </label>
-                    <div className="flex flex-wrap gap-2 sm:gap-3">
+                    <div className="flex flex-wrap gap-1.5 sm:gap-2 justify-center">
                       {(isTechnoPro() ? SERIES_TECHNO_PRO : SPECIALITES_GENERALES).map((spec) => {
                         const isSelected = formData.spes.includes(spec);
                         const requiredCount = getRequiredSpecsCount();
@@ -640,7 +643,7 @@ export default function Onboarding({ onComplete }) {
                             whileHover={{ scale: isMaxReached ? 1 : 1.02 }}
                             whileTap={{ scale: 0.98 }}
                             disabled={isMaxReached && !isTechnoPro()}
-                            className={`px-6 py-3 rounded-full text-sm font-medium transition-all duration-300 ${
+                            className={`px-3 sm:px-4 md:px-6 py-2 sm:py-2.5 md:py-3 rounded-full text-xs sm:text-sm font-medium transition-all duration-300 touch-manipulation ${
                               isSelected
                                 ? 'bg-indigo-600 border border-indigo-500 text-white shadow-[0_0_15px_rgba(79,70,229,0.4)]'
                                 : isMaxReached && !isTechnoPro()
@@ -662,11 +665,11 @@ export default function Onboarding({ onComplete }) {
 
                   {/* Options (Uniquement pour Terminale, Bac+ ou Réorientation) */}
                   {(formData.classe === 'Terminale' || formData.classe === 'Étudiant (Bac+)' || formData.classe === 'En réorientation') && !isTechnoPro() && (
-                    <div className="pt-6 border-t border-white/10">
-                      <label className="block text-sm text-slate-400 mb-4 font-medium">
+                    <div className="pt-3 sm:pt-4 border-t border-white/10">
+                      <label className="block text-xs sm:text-sm text-slate-400 mb-2 sm:mb-3 font-medium text-center">
                         As-tu une Option ?
                       </label>
-                      <div className="flex flex-wrap gap-3">
+                      <div className="flex flex-wrap gap-2 sm:gap-2.5 justify-center">
                         {OPTIONS.map((option) => {
                           const isSelected = formData.options === option;
                           const isMathOption = option === 'Maths Expertes' || option === 'Maths Complémentaire';
@@ -676,7 +679,7 @@ export default function Onboarding({ onComplete }) {
                               onClick={() => handleOptionSelect(option)}
                               whileHover={{ scale: 1.02 }}
                               whileTap={{ scale: 0.98 }}
-                              className={`px-6 py-3 rounded-full text-sm font-medium transition-all duration-300 ${
+                              className={`px-3 sm:px-4 md:px-6 py-2 sm:py-2.5 md:py-3 rounded-full text-xs sm:text-sm font-medium transition-all duration-300 touch-manipulation ${
                                 isSelected
                                   ? isMathOption
                                     ? 'bg-gradient-to-r from-amber-500/20 to-yellow-500/20 border-2 border-amber-500/70 text-white shadow-[0_0_15px_rgba(245,158,11,0.4)]'
@@ -708,17 +711,17 @@ export default function Onboarding({ onComplete }) {
               transition={{ duration: 0.4, ease: "easeInOut" }}
               className="w-full h-full flex flex-col"
             >
-              <div className="flex-1 flex flex-col justify-center overflow-y-auto px-4 sm:px-0">
+              <div className="flex-1 flex flex-col justify-center overflow-hidden px-2 sm:px-4">
                 <div className="max-w-3xl mx-auto w-full">
-                  <div className="text-center mb-6 sm:mb-8">
-                    <h2 className="text-xl sm:text-2xl text-white mb-2 font-semibold">
+                  <div className="text-center mb-3 sm:mb-4 md:mb-6">
+                    <h2 className="text-base sm:text-lg md:text-xl lg:text-2xl text-white mb-1 sm:mb-2 font-semibold">
                       TON NIVEAU D'ANGLAIS ?
                     </h2>
-                    <p className="text-xs sm:text-sm text-slate-400">
+                    <p className="text-[10px] sm:text-xs text-slate-400">
                       Critère important pour l'admission.
                     </p>
                   </div>
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 sm:gap-3">
                     {ENGLISH_LEVELS.map((level, index) => {
                       const isSelected = formData.englishLevel === level.id;
                       return (
@@ -730,34 +733,34 @@ export default function Onboarding({ onComplete }) {
                           transition={{ delay: index * 0.1 }}
                           whileHover={{ scale: 1.02, y: -4 }}
                           whileTap={{ scale: 0.98 }}
-                          className={`relative p-6 rounded-xl border-2 transition-all duration-300 text-left ${
+                          className={`relative p-3 sm:p-4 md:p-6 rounded-xl border-2 transition-all duration-300 text-left touch-manipulation ${
                             isSelected
                               ? 'bg-indigo-600/20 border-indigo-500 ring-1 ring-indigo-500 shadow-[0_0_20px_rgba(79,70,229,0.3)]'
                               : 'bg-white/5 border-white/10 hover:bg-white/10'
                           }`}
                         >
-                          <div className="flex items-start space-x-4">
-                            <div className={`p-3 rounded-lg flex-shrink-0 ${
+                          <div className="flex items-start space-x-2 sm:space-x-3 md:space-x-4">
+                            <div className={`p-2 sm:p-2.5 md:p-3 rounded-lg flex-shrink-0 ${
                               isSelected 
                                 ? 'bg-indigo-500/20' 
                                 : 'bg-white/5'
                             }`}>
-                              <Languages className={`w-6 h-6 ${
+                              <Languages className={`w-4 h-4 sm:w-5 sm:h-5 md:w-6 md:h-6 ${
                                 isSelected ? 'text-indigo-400' : 'text-slate-400'
                               }`} strokeWidth={1.5} />
                             </div>
-                            <div className="flex-1">
-                              <div className={`text-lg font-bold mb-1 ${
+                            <div className="flex-1 min-w-0">
+                              <div className={`text-sm sm:text-base md:text-lg font-bold mb-0.5 sm:mb-1 ${
                                 isSelected ? 'text-white' : 'text-slate-200'
                               }`}>
                                 {level.label}
                               </div>
-                              <div className={`text-sm font-semibold mb-2 ${
+                              <div className={`text-xs sm:text-sm font-semibold mb-1 sm:mb-2 ${
                                 isSelected ? 'text-indigo-300' : 'text-slate-400'
                               }`}>
                                 {level.subtitle}
                               </div>
-                              <div className={`text-xs ${
+                              <div className={`text-[10px] sm:text-xs ${
                                 isSelected ? 'text-slate-300' : 'text-slate-500'
                               }`}>
                                 {level.description}
@@ -796,12 +799,12 @@ export default function Onboarding({ onComplete }) {
               transition={{ duration: 0.4, ease: "easeInOut" }}
               className="w-full h-full flex flex-col"
             >
-              <div className="flex-1 flex flex-col justify-center px-4 sm:px-0">
+              <div className="flex-1 flex flex-col justify-center overflow-hidden px-2 sm:px-4">
                 <div className="max-w-2xl mx-auto w-full">
-                  <label className="block text-base sm:text-lg text-white mb-6 sm:mb-8 font-semibold text-center">
+                  <label className="block text-base sm:text-lg md:text-xl text-white mb-3 sm:mb-4 md:mb-6 font-semibold text-center">
                     Ton but ultime ?
                   </label>
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6">
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
                     {OBJECTIFS.map((obj, index) => {
                       const Icon = obj.icon;
                       const isSelected = formData.objectif === obj.id;
@@ -814,23 +817,23 @@ export default function Onboarding({ onComplete }) {
                           transition={{ delay: index * 0.1 }}
                           whileHover={{ scale: 1.02, y: -4 }}
                           whileTap={{ scale: 0.98 }}
-                          className={`relative p-8 rounded-2xl border-2 transition-all duration-300 ${
+                          className={`relative p-4 sm:p-5 md:p-6 lg:p-8 rounded-xl sm:rounded-2xl border-2 transition-all duration-300 touch-manipulation ${
                             isSelected
                               ? 'border-indigo-500 bg-indigo-500/10 shadow-[0_0_20px_rgba(79,70,229,0.3)]'
                               : 'border-white/10 bg-white/5 hover:border-white/20 hover:bg-white/10'
                           }`}
                         >
-                          <div className="flex flex-col items-center text-center space-y-4">
-                            <div className={`p-4 rounded-xl ${
+                          <div className="flex flex-col items-center text-center space-y-2 sm:space-y-3 md:space-y-4">
+                            <div className={`p-3 sm:p-3.5 md:p-4 rounded-xl ${
                               isSelected 
                                 ? 'bg-indigo-500/20' 
                                 : 'bg-white/5'
                             }`}>
-                              <Icon className={`w-8 h-8 ${
+                              <Icon className={`w-6 h-6 sm:w-7 sm:h-7 md:w-8 md:h-8 ${
                                 isSelected ? 'text-indigo-400' : 'text-slate-400'
                               }`} strokeWidth={1.5} />
                             </div>
-                            <span className={`text-sm font-semibold ${
+                            <span className={`text-xs sm:text-sm font-semibold ${
                               isSelected ? 'text-white' : 'text-slate-300'
                             }`}>
                               {obj.label}
@@ -870,8 +873,8 @@ export default function Onboarding({ onComplete }) {
         )}
       </AnimatePresence>
 
-      {/* Bouton de navigation */}
-      <div className="mt-6 sm:mt-8 flex justify-center px-4">
+      {/* Bouton de navigation - Compact sur mobile */}
+      <div className="mt-3 sm:mt-4 md:mt-6 flex justify-center px-2 sm:px-4 flex-shrink-0">
         <AnimatePresence>
           {(step === 2 ? isStep2SubQuestionValid() : isStepValid()) && (
             <motion.button
@@ -879,7 +882,7 @@ export default function Onboarding({ onComplete }) {
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: 10 }}
               onClick={step === 5 ? handleSubmit : handleNext}
-              className="w-full sm:w-auto px-6 sm:px-8 py-3 sm:py-4 rounded-xl bg-gradient-to-r from-indigo-600 to-violet-600 text-white font-semibold text-xs sm:text-sm hover:from-indigo-500 hover:to-violet-500 active:from-indigo-700 active:to-violet-700 transition-all duration-200 shadow-lg shadow-indigo-500/20 touch-manipulation"
+              className="w-full sm:w-auto px-4 sm:px-6 md:px-8 py-2.5 sm:py-3 md:py-4 rounded-xl bg-gradient-to-r from-indigo-600 to-violet-600 text-white font-semibold text-xs sm:text-sm hover:from-indigo-500 hover:to-violet-500 active:from-indigo-700 active:to-violet-700 transition-all duration-200 shadow-lg shadow-indigo-500/20 touch-manipulation"
             >
               {step === 5 
                 ? 'LANCER LA MISSION 🚀' 

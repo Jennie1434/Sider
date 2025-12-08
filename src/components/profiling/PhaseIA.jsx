@@ -514,16 +514,18 @@ export default function PhaseIA({ onComplete, userProfile }) {
                           className="absolute inset-0 bg-cover bg-center transition-transform duration-700 group-hover:scale-110"
                           style={{
                             backgroundImage: choice.visual === 'gradient' 
-                              ? `url('https://images.unsplash.com/photo-1677442136019-21780ecad995?q=80&w=2000&auto=format&fit=crop')`
-                              : `url('https://images.unsplash.com/photo-1551288049-bebda4e38f71?q=80&w=2000&auto=format&fit=crop')`
+                              // Générateur d'Art IA - Art numérique créatif avec couleurs vibrantes et abstraites
+                              ? `url('https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?q=90&w=2000&auto=format&fit=crop&ixlib=rb-4.0.3')`
+                              // Dashboard Analytics - Interface moderne professionnelle avec graphiques et données
+                              : `url('https://images.unsplash.com/photo-1551288049-bebda4e38f71?q=90&w=2000&auto=format&fit=crop&ixlib=rb-4.0.3')`
                           }}
                         />
                         
-                        {/* Overlay avec gradient coloré basé sur l'index */}
+                        {/* Overlay avec gradient coloré basé sur l'index - Opacité réduite pour mieux voir les images */}
                         <div className={`absolute inset-0 transition-all duration-500 ${
                           index === 0 
-                            ? 'bg-gradient-to-br from-violet-900/80 via-indigo-900/80 to-purple-900/80'
-                            : 'bg-gradient-to-br from-emerald-900/80 via-teal-900/80 to-cyan-900/80'
+                            ? 'bg-gradient-to-br from-violet-900/60 via-indigo-900/60 to-purple-900/60'
+                            : 'bg-gradient-to-br from-emerald-900/60 via-teal-900/60 to-cyan-900/60'
                         }`} />
                         
                         {/* Grille technique animée (pour les cartes avec chart) */}

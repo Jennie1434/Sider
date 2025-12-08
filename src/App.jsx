@@ -285,7 +285,7 @@ function AppContent() {
   }
 
   return (
-    <div className="min-h-screen flex items-center justify-center p-2 sm:p-4 md:p-6 lg:p-8 font-sans text-slate-300 relative overflow-hidden">
+    <div className="h-screen flex items-center justify-center p-0 sm:p-2 md:p-4 lg:p-8 font-sans text-slate-300 relative overflow-hidden">
       {/* Fond d'écran avec profondeur et lumière */}
       <div className="fixed inset-0 pointer-events-none z-0">
         {/* Fond de base */}
@@ -307,32 +307,32 @@ function AppContent() {
       </div>
       
       {/* Conteneur Central - La Carte Luxueuse */}
-      <div className="relative z-10 w-full max-w-4xl bg-white/[0.02] backdrop-blur-2xl border border-white/[0.08] ring-1 ring-inset ring-white/[0.05] rounded-xl sm:rounded-2xl md:rounded-[32px] shadow-2xl shadow-black/80 p-4 sm:p-6 md:p-8 lg:p-12 xl:p-16 flex flex-col overflow-hidden transition-all duration-500 h-auto my-2 sm:my-4">
-        {/* Header */}
-        <header className="flex flex-row items-center justify-between pb-4 sm:pb-6 md:pb-8 lg:pb-10 border-b border-white/[0.08]">
-          <div className="text-white font-bold tracking-[0.2em] text-xs sm:text-sm uppercase">
+      <div className="relative z-10 w-full h-full sm:h-auto sm:max-h-[95vh] max-w-4xl bg-white/[0.02] backdrop-blur-2xl border-0 sm:border border-white/[0.08] ring-0 sm:ring-1 ring-inset ring-white/[0.05] rounded-none sm:rounded-xl md:rounded-2xl lg:rounded-[32px] shadow-2xl shadow-black/80 p-3 sm:p-4 md:p-6 lg:p-12 xl:p-16 flex flex-col overflow-hidden transition-all duration-500">
+        {/* Header - Compact sur mobile */}
+        <header className="flex flex-row items-center justify-between pb-2 sm:pb-3 md:pb-4 lg:pb-6 border-b border-white/[0.08] flex-shrink-0">
+          <div className="text-white font-bold tracking-[0.2em] text-[10px] sm:text-xs md:text-sm uppercase">
             SIDER
           </div>
-          <div className="text-xs bg-white/5 px-2 py-1 rounded text-slate-500">
+          <div className="text-[10px] sm:text-xs bg-white/5 px-1.5 sm:px-2 py-0.5 sm:py-1 rounded text-slate-500">
             BETA
           </div>
         </header>
 
-        {/* Contenu Principal */}
-        <main className="flex-1 overflow-y-auto pt-4 sm:pt-6 md:pt-8 lg:pt-10">
+        {/* Contenu Principal - Pas de scroll sur mobile */}
+        <main className="flex-1 flex items-center justify-center overflow-hidden pt-2 sm:pt-3 md:pt-4 lg:pt-6">
           {step === 'welcome' && (
-            <div className="flex-1 flex items-center justify-center min-h-[calc(100vh-200px)] sm:min-h-[400px] py-4 sm:py-6 md:py-8">
-              <div className="text-center max-w-md mx-auto px-2 sm:px-4 w-full">
-                <h1 className="text-white font-medium text-2xl sm:text-3xl md:text-4xl lg:text-5xl mb-3 sm:mb-4 md:mb-6 tracking-tight">
+            <div className="flex-1 flex items-center justify-center w-full h-full py-2 sm:py-4">
+              <div className="text-center max-w-md mx-auto px-3 sm:px-4 w-full">
+                <h1 className="text-white font-medium text-3xl sm:text-4xl md:text-5xl lg:text-6xl mb-2 sm:mb-3 md:mb-4 tracking-tight leading-tight">
                   SIDER
                 </h1>
-                <p className="text-slate-400 font-medium text-xs sm:text-sm md:text-base leading-relaxed mb-4 sm:mb-6 md:mb-8 px-2">
+                <p className="text-slate-400 font-medium text-sm sm:text-base md:text-lg leading-relaxed mb-3 sm:mb-4 md:mb-6 px-1">
                   Analyse de profil technique et créative. 4 modules pour définir votre identité professionnelle.
                 </p>
                 <div className="flex flex-col gap-2 sm:gap-3 w-full">
                   <button 
                     onClick={handleStart}
-                    className="bg-white text-black hover:bg-slate-200 active:bg-slate-300 transition-colors px-4 sm:px-6 md:px-8 py-2.5 sm:py-3 rounded-lg font-medium text-xs sm:text-sm w-full touch-manipulation"
+                    className="bg-white text-black hover:bg-slate-200 active:bg-slate-300 transition-colors px-4 sm:px-6 md:px-8 py-3 sm:py-3.5 md:py-4 rounded-lg font-medium text-sm sm:text-base w-full touch-manipulation shadow-lg"
                   >
                     INITIALISER LE SYSTÈME
                   </button>
@@ -341,7 +341,7 @@ function AppContent() {
                   {isAdminAuthenticated() && (
                     <button 
                       onClick={() => setStep('admin')}
-                      className="bg-white/5 text-white hover:bg-white/10 active:bg-white/15 border border-white/20 transition-colors px-4 sm:px-6 md:px-8 py-2.5 sm:py-3 rounded-lg font-medium text-xs sm:text-sm w-full touch-manipulation"
+                      className="bg-white/5 text-white hover:bg-white/10 active:bg-white/15 border border-white/20 transition-colors px-4 sm:px-6 md:px-8 py-3 sm:py-3.5 md:py-4 rounded-lg font-medium text-sm sm:text-base w-full touch-manipulation"
                     >
                       📊 ACCÈS ADMIN
                     </button>

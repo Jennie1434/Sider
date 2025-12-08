@@ -17,26 +17,40 @@
   body {
     margin: 0;
     padding: 0;
-    min-height: 100vh;
+    height: 100vh;
     width: 100%;
     font-family: 'Inter', system-ui, -apple-system, sans-serif;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
     background-color: #0B0C15;
     color: white;
-    overflow-x: hidden;
-    position: relative;
-    overflow-y: auto;
-    /* Empêcher le scroll horizontal sur mobile */
-    overscroll-behavior-y: contain;
+    overflow: hidden; /* Pas de scroll sur mobile */
+    position: fixed; /* Empêcher le scroll */
+    overscroll-behavior: none; /* Empêcher le bounce sur iOS */
   }
   
   #root {
-    min-height: 100vh;
+    height: 100vh;
     width: 100%;
     display: flex;
     flex-direction: column;
     position: relative;
+    overflow: hidden; /* Pas de scroll */
+  }
+  
+  /* Sur desktop, permettre le scroll si nécessaire */
+  @media (min-width: 768px) {
+    body {
+      position: relative;
+      overflow-y: auto;
+      height: auto;
+      min-height: 100vh;
+    }
+    
+    #root {
+      height: auto;
+      min-height: 100vh;
+    }
   }
   
   /* Améliorer le touch sur mobile */
