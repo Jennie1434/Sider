@@ -1,12 +1,9 @@
 import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { 
-  Rocket,
   Briefcase,
   BarChart3,
-  Navigation,
   Cpu,
-  Target,
   Languages
 } from 'lucide-react';
 import { useScoring } from '../context/ScoringContext';
@@ -69,12 +66,7 @@ const ENGLISH_LEVELS = [
   { id: 'C1-C2', label: 'C1/C2', subtitle: 'Bilingue', description: 'Fluent / Natif' }
 ];
 
-const OBJECTIFS = [
-  { id: 'entreprise', label: 'Créer une boite', icon: Rocket },
-  { id: 'expert', label: 'Expert Tech/Data', icon: BarChart3 },
-  { id: 'voie', label: 'Trouver ma voie', icon: Navigation },
-  { id: 'autre', label: 'Autre', icon: Target }
-];
+// OBJECTIFS supprimé - maintenant dans le quiz PhaseIA
 
 export default function Onboarding({ onComplete }) {
   const { addScore } = useScoring();
@@ -90,8 +82,7 @@ export default function Onboarding({ onComplete }) {
     moyenne: '',
     spes: [],
     options: '',
-    englishLevel: '',
-    objectif: ''
+    englishLevel: ''
   });
   
   const [showAlert, setShowAlert] = useState(false);
@@ -152,8 +143,6 @@ export default function Onboarding({ onComplete }) {
         return formData.spes.length === requiredCount;
       case 4:
         return formData.englishLevel;
-      case 5:
-        return formData.objectif;
       default:
         return false;
     }
@@ -204,14 +193,6 @@ export default function Onboarding({ onComplete }) {
         addScore(-prevScore.albert, -prevScore.eugenia, `Anglais: ${prevValue} (retiré)`);
       }
       addScore(score.albert, score.eugenia, `Anglais: ${value}`);
-    } else if (field === 'objectif' && SCORING_RULES.objectif[value]) {
-      const score = SCORING_RULES.objectif[value];
-      if (prevValue && SCORING_RULES.objectif[prevValue]) {
-        const prevScore = SCORING_RULES.objectif[prevValue];
-        addScore(-prevScore.albert, -prevScore.eugenia, `Objectif: ${prevValue} (retiré)`);
-      }
-      addScore(score.albert, score.eugenia, `Objectif: ${value}`);
-    }
   };
 
   const handleSpecialiteToggle = (spec) => {
@@ -315,7 +296,7 @@ export default function Onboarding({ onComplete }) {
           setStep2SubQuestion(0); // Réinitialiser pour la prochaine fois
         }
       }
-    } else if (isStepValid() && step < 5) {
+    } else if (isStepValid() && step < 4) {
       setStep(prev => prev + 1);
       // Réinitialiser step2SubQuestion si on quitte l'étape 2
       if (step === 2) {
@@ -416,9 +397,8 @@ export default function Onboarding({ onComplete }) {
       const timer = setTimeout(() => {
         if (step === 1) {
           setStep(2);
-        } else if (step === 4) {
-          setStep(5);
         }
+        // L'étape 4 est la dernière, pas de progression automatique
       }, 800); // Délai de 800ms pour que l'utilisateur voie sa sélection
       
       return () => clearTimeout(timer);
@@ -456,14 +436,14 @@ export default function Onboarding({ onComplete }) {
             Étape {step}/5
           </span>
           <span className="text-[11px] sm:text-xs text-slate-300 font-medium" style={{ fontFamily: 'system-ui, -apple-system, sans-serif' }}>
-            {Math.round((step / 5) * 100)}%
+            {Math.round((step / 4) * 100)}%
           </span>
         </div>
         <div className="w-full bg-white/[0.05] rounded-full h-1.5 sm:h-2 overflow-hidden">
           <motion.div
             className="h-full bg-gradient-to-r from-violet-500 via-indigo-500 to-purple-500 shadow-lg shadow-violet-500/30"
             initial={{ width: 0 }}
-            animate={{ width: `${(step / 5) * 100}%` }}
+            animate={{ width: `${(step / 4) * 100}%` }}
             transition={{ duration: 0.5, ease: "easeOut" }}
           />
         </div>
@@ -934,68 +914,6 @@ export default function Onboarding({ onComplete }) {
               </div>
             </motion.div>
           )}
-
-          {/* ÉTAPE 5 : L'OBJECTIF */}
-          {step === 5 && (
-            <motion.div
-              key="step5"
-              custom={5}
-              variants={slideVariants}
-              initial="enter"
-              animate="center"
-              exit="exit"
-              transition={{ duration: 0.4, ease: "easeInOut" }}
-              className="w-full h-full flex flex-col"
-            >
-              <div className="flex-1 flex flex-col justify-center overflow-hidden px-2 sm:px-4">
-                <div className="max-w-2xl mx-auto w-full">
-                  <label className="block text-xl sm:text-2xl md:text-3xl text-white mb-5 sm:mb-6 md:mb-8 text-center" style={{ fontFamily: 'system-ui, -apple-system, sans-serif', fontWeight: 300, letterSpacing: '-0.01em' }}>
-                    Ton but ultime ?
-                  </label>
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-5">
-                    {OBJECTIFS.map((obj, index) => {
-                      const Icon = obj.icon;
-                      const isSelected = formData.objectif === obj.id;
-                      return (
-                        <motion.button
-                          key={obj.id}
-                          onClick={() => handleSelect('objectif', obj.id)}
-                          initial={{ opacity: 0, y: 20 }}
-                          animate={{ opacity: 1, y: 0 }}
-                          transition={{ delay: index * 0.1 }}
-                          whileHover={{ scale: 1.01, y: -1 }}
-                          whileTap={{ scale: 0.98 }}
-                          className={`relative p-5 sm:p-6 md:p-8 lg:p-10 rounded-lg border transition-all duration-300 touch-manipulation ${
-                            isSelected
-                              ? 'bg-gradient-to-br from-violet-600/40 to-indigo-600/40 border-violet-400/50 text-white shadow-lg shadow-violet-500/30'
-                              : 'bg-white/[0.05] border-white/20 hover:bg-violet-500/10 hover:border-violet-400/30'
-                          }`}
-                          style={{ fontFamily: 'system-ui, -apple-system, sans-serif' }}
-                        >
-                          <div className="flex flex-col items-center text-center space-y-3 sm:space-y-4 md:space-y-5">
-                            <div className={`p-4 sm:p-5 md:p-6 rounded-lg ${
-                              isSelected 
-                                ? 'bg-violet-500/30 shadow-lg shadow-violet-500/50' 
-                                : 'bg-white/5'
-                            }`}>
-                              <Icon className={`w-7 h-7 sm:w-8 sm:h-8 md:w-10 md:h-10 ${
-                                isSelected ? 'text-violet-200' : 'text-slate-400'
-                              }`} strokeWidth={1.5} />
-                            </div>
-                            <span className={`text-sm sm:text-base md:text-lg ${
-                              isSelected ? 'text-white' : 'text-slate-300'
-                            }`} style={{ fontFamily: 'system-ui, -apple-system, sans-serif', fontWeight: 400 }}>
-                              {obj.label}
-                            </span>
-                          </div>
-                        </motion.button>
-                      );
-                    })}
-                  </div>
-                </div>
-              </div>
-            </motion.div>
-          )}
         </AnimatePresence>
       </div>
 
@@ -1025,7 +943,7 @@ export default function Onboarding({ onComplete }) {
       {/* Bouton de navigation - Uniquement pour la soumission finale */}
       <div className="mt-4 sm:mt-5 md:mt-6 flex justify-center px-3 sm:px-4 flex-shrink-0">
         <AnimatePresence>
-          {step === 5 && isStepValid() && (
+          {step === 4 && isStepValid() && (
             <motion.button
               initial={{ opacity: 0, y: 10, scale: 0.95 }}
               animate={{ opacity: 1, y: 0, scale: 1 }}
