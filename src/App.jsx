@@ -334,7 +334,8 @@ function AppContent() {
                   initial={{ opacity: 0, scale: 0.9 }}
                   animate={{ opacity: 1, scale: 1 }}
                   transition={{ duration: 0.6, delay: 0.2 }}
-                  className="text-white font-bold text-4xl sm:text-5xl md:text-6xl lg:text-7xl mb-4 sm:mb-5 md:mb-6 tracking-tight leading-tight bg-gradient-to-r from-white via-indigo-200 to-violet-200 bg-clip-text text-transparent"
+                  className="text-white font-light text-4xl sm:text-5xl md:text-6xl lg:text-7xl mb-4 sm:mb-5 md:mb-6 tracking-[0.15em] leading-tight"
+                  style={{ fontFamily: 'system-ui, -apple-system, sans-serif', letterSpacing: '0.15em' }}
                 >
                   SIDER
                 </motion.h1>
@@ -359,11 +360,19 @@ function AppContent() {
                 >
                   <motion.button 
                     onClick={handleStart}
-                    whileHover={{ scale: 1.02, y: -2 }}
+                    whileHover={{ scale: 1.02, y: -2, borderColor: 'rgba(255, 255, 255, 0.3)' }}
                     whileTap={{ scale: 0.98 }}
-                    className="bg-gradient-to-r from-indigo-600 via-violet-600 to-purple-600 text-white hover:from-indigo-500 hover:via-violet-500 hover:to-purple-500 active:from-indigo-700 active:via-violet-700 active:to-purple-700 transition-all px-6 sm:px-8 md:px-10 py-4 sm:py-4.5 md:py-5 rounded-xl sm:rounded-2xl font-bold text-base sm:text-lg md:text-xl w-full touch-manipulation shadow-2xl shadow-indigo-500/30 hover:shadow-indigo-500/50"
+                    className="bg-[#0B0C15] text-white hover:bg-[#0F1018] active:bg-[#08090F] border-2 border-white/10 hover:border-white/20 transition-all px-6 sm:px-8 md:px-10 py-4 sm:py-4.5 md:py-5 rounded-xl sm:rounded-2xl w-full touch-manipulation shadow-xl shadow-black/50 hover:shadow-2xl hover:shadow-black/70 backdrop-blur-sm relative overflow-hidden"
+                    style={{ fontFamily: 'system-ui, -apple-system, sans-serif', fontWeight: 300, letterSpacing: '0.05em' }}
                   >
-                    INITIALISER LE SYSTÈME
+                    <span className="relative z-10">INITIALISER LE SYSTÈME</span>
+                    {/* Effet de lumière subtil au hover */}
+                    <motion.div
+                      className="absolute inset-0 bg-gradient-to-r from-transparent via-white/5 to-transparent"
+                      initial={{ x: '-100%' }}
+                      whileHover={{ x: '100%' }}
+                      transition={{ duration: 0.6 }}
+                    />
                   </motion.button>
                   
                   {/* Bouton admin caché - accessible uniquement via code secret ou URL avec code */}

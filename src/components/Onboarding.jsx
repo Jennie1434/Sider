@@ -80,6 +80,7 @@ export default function Onboarding({ onComplete }) {
   const { addScore } = useScoring();
   const [step, setStep] = useState(1);
   const [step2SubQuestion, setStep2SubQuestion] = useState(0); // 0 = classe, 1 = filière, 2 = moyenne
+  const [step3SubSection, setStep3SubSection] = useState('spes'); // 'spes' ou 'options'
   const [formData, setFormData] = useState({
     prenom: '',
     nom: '',
@@ -244,12 +245,30 @@ export default function Onboarding({ onComplete }) {
         // Désélectionner
         const score = getSpecialiteScore(spec);
         addScore(-score.albert, -score.eugenia, `Spécialité: ${spec} (retiré)`);
-        return { ...prev, spes: current.filter(s => s !== spec) };
+        const newSpes = current.filter(s => s !== spec);
+        // Si on revient en dessous du nombre requis, revenir à la section spes
+        if (newSpes.length < requiredCount) {
+          setStep3SubSection('spes');
+        }
+        return { ...prev, spes: newSpes };
       } else if (current.length < requiredCount) {
         // Sélectionner si on n'a pas atteint le max
         const score = getSpecialiteScore(spec);
         addScore(score.albert, score.eugenia, `Spécialité: ${spec}`);
-        return { ...prev, spes: [...current, spec] };
+        const newSpes = [...current, spec];
+        // Si on a atteint le nombre requis, passer automatiquement à la section options
+        if (newSpes.length === requiredCount && !isTechnoPro()) {
+          setTimeout(() => {
+            // Vérifier si l'utilisateur peut avoir une option
+            if (formData.classe === 'Terminale' || formData.classe === 'Étudiant (Bac+)' || formData.classe === 'En réorientation') {
+              setStep3SubSection('options');
+            } else {
+              // Sinon, passer directement à l'étape suivante
+              setStep(4);
+            }
+          }, 600);
+        }
+        return { ...prev, spes: newSpes };
       } else {
         // Afficher l'alerte si on essaie de dépasser le max (Terminale)
         if (formData.classe === 'Terminale' || formData.classe === 'Étudiant (Bac+)' || formData.classe === 'En réorientation') {
@@ -259,6 +278,14 @@ export default function Onboarding({ onComplete }) {
         return prev;
       }
     });
+  };
+
+  const handleNoOption = () => {
+    setFormData(prev => ({ ...prev, options: '' }));
+    // Passer automatiquement à l'étape suivante
+    setTimeout(() => {
+      setStep(4);
+    }, 300);
   };
 
   const handleOptionSelect = (option) => {
@@ -309,6 +336,20 @@ export default function Onboarding({ onComplete }) {
         setStep2SubQuestion(1);
       } else {
         setStep2SubQuestion(0);
+      }
+    }
+    // Réinitialiser step3SubSection quand on entre dans l'étape 3
+    if (step === 3) {
+      const requiredCount = getRequiredSpecsCount();
+      if (formData.spes.length === requiredCount) {
+        // Si les spécialités sont déjà complètes, passer à la section options si applicable
+        if (formData.classe === 'Terminale' || formData.classe === 'Étudiant (Bac+)' || formData.classe === 'En réorientation') {
+          if (!isTechnoPro()) {
+            setStep3SubSection('options');
+          }
+        }
+      } else {
+        setStep3SubSection('spes');
       }
     }
   }, [step]);
@@ -659,10 +700,10 @@ export default function Onboarding({ onComplete }) {
             </motion.div>
           )}
 
-          {/* ÉTAPE 3 : LES SPÉCIALITÉS */}
+          {/* ÉTAPE 3 : LES SPÉCIALITÉS ET OPTIONS */}
           {step === 3 && formData.classe !== 'Seconde' && (
             <motion.div
-              key="step3"
+              key={`step3-${step3SubSection}`}
               custom={3}
               variants={slideVariants}
               initial="enter"
@@ -672,95 +713,132 @@ export default function Onboarding({ onComplete }) {
               className="w-full h-full flex flex-col"
             >
               <div className="flex-1 flex flex-col justify-center overflow-hidden px-2 sm:px-4">
-                <div className="space-y-3 sm:space-y-4 md:space-y-6 max-w-2xl mx-auto w-full">
+                <div className="max-w-2xl mx-auto w-full">
                   
-                  {/* Alerte pour Terminale */}
-                  <AnimatePresence>
-                    {showAlert && (
-                      <motion.div
-                        initial={{ opacity: 0, y: -10 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        exit={{ opacity: 0, y: -10 }}
-                        className="bg-amber-500/20 border border-amber-500/50 rounded-xl p-2 sm:p-3 text-center"
-                      >
-                        <p className="text-[10px] sm:text-xs text-amber-300">
-                          En Terminale, on ne garde que 2 spés !
-                        </p>
-                      </motion.div>
-                    )}
-                  </AnimatePresence>
-
-                  {/* Spécialités principales ou Séries Techno/Pro - Design moderne */}
-                  <div>
-                    <label className="block text-base sm:text-lg md:text-xl text-white mb-3 sm:mb-4 md:mb-6 font-bold text-center tracking-tight">
-                      {isTechnoPro() 
-                        ? 'Quelle est ta série ?'
-                        : `Quelles sont tes spécialités ? (${getRequiredSpecsCount()} requises)`
-                      }
-                    </label>
-                    <div className="flex flex-wrap gap-2 sm:gap-2.5 md:gap-3 justify-center">
-                      {(isTechnoPro() ? SERIES_TECHNO_PRO : SPECIALITES_GENERALES).map((spec) => {
-                        const isSelected = formData.spes.includes(spec);
-                        const requiredCount = getRequiredSpecsCount();
-                        const isMaxReached = formData.spes.length >= requiredCount && !isSelected;
-                        return (
-                          <motion.button
-                            key={spec}
-                            onClick={() => handleSpecialiteToggle(spec)}
-                            whileHover={{ scale: isMaxReached ? 1 : 1.05, y: isMaxReached ? 0 : -2 }}
-                            whileTap={{ scale: 0.98 }}
-                            disabled={isMaxReached && !isTechnoPro()}
-                            className={`px-4 sm:px-5 md:px-7 py-2.5 sm:py-3 md:py-3.5 rounded-full text-xs sm:text-sm md:text-base font-semibold transition-all duration-300 touch-manipulation border-2 ${
-                              isSelected
-                                ? 'bg-gradient-to-r from-indigo-600 to-violet-600 border-indigo-400 text-white shadow-[0_0_20px_rgba(79,70,229,0.5)] scale-105'
-                                : isMaxReached && !isTechnoPro()
-                                ? 'bg-white/5 border-white/10 text-slate-500 cursor-not-allowed opacity-50'
-                                : 'bg-white/5 border-white/20 text-slate-300 hover:bg-white/10 hover:border-white/30 hover:text-white'
-                            }`}
+                  {/* Section Spécialités */}
+                  {step3SubSection === 'spes' && (
+                    <motion.div
+                      initial={{ opacity: 0, y: 20 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      transition={{ duration: 0.3 }}
+                      className="space-y-4 sm:space-y-5 md:space-y-6"
+                    >
+                      {/* Alerte pour Terminale */}
+                      <AnimatePresence>
+                        {showAlert && (
+                          <motion.div
+                            initial={{ opacity: 0, y: -10 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            exit={{ opacity: 0, y: -10 }}
+                            className="bg-amber-500/20 border border-amber-500/50 rounded-xl p-2 sm:p-3 text-center"
                           >
-                            {spec}
-                          </motion.button>
-                        );
-                      })}
-                    </div>
-                    {formData.spes.length > 0 && (
-                      <p className="mt-4 text-xs text-slate-500">
-                        Choix : {formData.spes.length} / {getRequiredSpecsCount()}
-                      </p>
-                    )}
-                  </div>
+                            <p className="text-[10px] sm:text-xs text-amber-300">
+                              En Terminale, on ne garde que 2 spés !
+                            </p>
+                          </motion.div>
+                        )}
+                      </AnimatePresence>
 
-                  {/* Options (Uniquement pour Terminale, Bac+ ou Réorientation) */}
-                  {(formData.classe === 'Terminale' || formData.classe === 'Étudiant (Bac+)' || formData.classe === 'En réorientation') && !isTechnoPro() && (
-                    <div className="pt-3 sm:pt-4 border-t border-white/10">
-                      <label className="block text-xs sm:text-sm text-slate-400 mb-2 sm:mb-3 font-medium text-center">
-                        As-tu une Option ?
-                      </label>
-                      <div className="flex flex-wrap gap-2 sm:gap-2.5 justify-center">
-                        {OPTIONS.map((option) => {
-                          const isSelected = formData.options === option;
-                          const isMathOption = option === 'Maths Expertes' || option === 'Maths Complémentaire';
-                          return (
-                            <motion.button
-                              key={option}
-                              onClick={() => handleOptionSelect(option)}
-                              whileHover={{ scale: 1.02 }}
-                              whileTap={{ scale: 0.98 }}
-                              className={`px-3 sm:px-4 md:px-6 py-2 sm:py-2.5 md:py-3 rounded-full text-xs sm:text-sm font-medium transition-all duration-300 touch-manipulation ${
-                                isSelected
-                                  ? isMathOption
-                                    ? 'bg-gradient-to-r from-amber-500/20 to-yellow-500/20 border-2 border-amber-500/70 text-white shadow-[0_0_15px_rgba(245,158,11,0.4)]'
-                                    : 'bg-violet-600 border border-violet-500 text-white shadow-[0_0_15px_rgba(139,92,246,0.4)]'
-                                  : 'bg-white/5 border border-white/10 text-slate-400 hover:bg-white/10'
-                              }`}
-                            >
-                              {option}
-                            </motion.button>
-                          );
-                        })}
+                      {/* Spécialités principales ou Séries Techno/Pro - Design moderne */}
+                      <div>
+                        <label className="block text-base sm:text-lg md:text-xl text-white mb-3 sm:mb-4 md:mb-6 font-bold text-center tracking-tight">
+                          {isTechnoPro() 
+                            ? 'Quelle est ta série ?'
+                            : `Quelles sont tes spécialités ? (${getRequiredSpecsCount()} requises)`
+                          }
+                        </label>
+                        <div className="flex flex-wrap gap-2 sm:gap-2.5 md:gap-3 justify-center">
+                          {(isTechnoPro() ? SERIES_TECHNO_PRO : SPECIALITES_GENERALES).map((spec) => {
+                            const isSelected = formData.spes.includes(spec);
+                            const requiredCount = getRequiredSpecsCount();
+                            const isMaxReached = formData.spes.length >= requiredCount && !isSelected;
+                            return (
+                              <motion.button
+                                key={spec}
+                                onClick={() => handleSpecialiteToggle(spec)}
+                                whileHover={{ scale: isMaxReached ? 1 : 1.05, y: isMaxReached ? 0 : -2 }}
+                                whileTap={{ scale: 0.98 }}
+                                disabled={isMaxReached && !isTechnoPro()}
+                                className={`px-4 sm:px-5 md:px-7 py-2.5 sm:py-3 md:py-3.5 rounded-full text-xs sm:text-sm md:text-base font-semibold transition-all duration-300 touch-manipulation border-2 ${
+                                  isSelected
+                                    ? 'bg-gradient-to-r from-indigo-600 to-violet-600 border-indigo-400 text-white shadow-[0_0_20px_rgba(79,70,229,0.5)] scale-105'
+                                    : isMaxReached && !isTechnoPro()
+                                    ? 'bg-white/5 border-white/10 text-slate-500 cursor-not-allowed opacity-50'
+                                    : 'bg-white/5 border-white/20 text-slate-300 hover:bg-white/10 hover:border-white/30 hover:text-white'
+                                }`}
+                              >
+                                {spec}
+                              </motion.button>
+                            );
+                          })}
+                        </div>
+                        {formData.spes.length > 0 && (
+                          <p className="mt-4 text-center text-xs sm:text-sm text-slate-400">
+                            Choix : {formData.spes.length} / {getRequiredSpecsCount()}
+                          </p>
+                        )}
                       </div>
-                    </div>
+                    </motion.div>
                   )}
+
+                  {/* Section Options */}
+                  {step3SubSection === 'options' && (
+                    <motion.div
+                      initial={{ opacity: 0, y: 20 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      transition={{ duration: 0.3 }}
+                      className="space-y-4 sm:space-y-5 md:space-y-6"
+                    >
+                      <div>
+                        <label className="block text-base sm:text-lg md:text-xl text-white mb-3 sm:mb-4 md:mb-6 font-bold text-center tracking-tight">
+                          As-tu une Option ?
+                        </label>
+                        <div className="flex flex-wrap gap-2 sm:gap-2.5 md:gap-3 justify-center mb-4">
+                          {OPTIONS.map((option) => {
+                            const isSelected = formData.options === option;
+                            const isMathOption = option === 'Maths Expertes' || option === 'Maths Complémentaire';
+                            return (
+                              <motion.button
+                                key={option}
+                                onClick={() => {
+                                  handleOptionSelect(option);
+                                  // Passer automatiquement à l'étape suivante après sélection
+                                  setTimeout(() => {
+                                    setStep(4);
+                                  }, 600);
+                                }}
+                                whileHover={{ scale: 1.05, y: -2 }}
+                                whileTap={{ scale: 0.98 }}
+                                className={`px-4 sm:px-5 md:px-7 py-2.5 sm:py-3 md:py-3.5 rounded-full text-xs sm:text-sm md:text-base font-semibold transition-all duration-300 touch-manipulation border-2 ${
+                                  isSelected
+                                    ? isMathOption
+                                      ? 'bg-gradient-to-r from-amber-500/20 to-yellow-500/20 border-2 border-amber-500/70 text-white shadow-[0_0_15px_rgba(245,158,11,0.4)] scale-105'
+                                      : 'bg-violet-600 border-2 border-violet-400 text-white shadow-[0_0_20px_rgba(139,92,246,0.5)] scale-105'
+                                    : 'bg-white/5 border-2 border-white/20 text-slate-300 hover:bg-white/10 hover:border-white/30 hover:text-white'
+                                }`}
+                              >
+                                {option}
+                              </motion.button>
+                            );
+                          })}
+                        </div>
+                        {/* Bouton "Pas d'option" */}
+                        <motion.button
+                          onClick={handleNoOption}
+                          whileHover={{ scale: 1.02, y: -2 }}
+                          whileTap={{ scale: 0.98 }}
+                          className="w-full sm:w-auto mx-auto block px-6 sm:px-8 md:px-10 py-3 sm:py-3.5 md:py-4 rounded-xl sm:rounded-2xl bg-white/5 border-2 border-white/20 text-slate-300 hover:bg-white/10 hover:border-white/30 hover:text-white font-semibold text-sm sm:text-base md:text-lg transition-all duration-300 touch-manipulation"
+                        >
+                          Pas d'option
+                        </motion.button>
+                      </div>
+                    </motion.div>
+                  )}
+                </div>
+              </div>
+            </motion.div>
+          )}
+
                 </div>
               </div>
             </motion.div>
@@ -948,7 +1026,7 @@ export default function Onboarding({ onComplete }) {
       */}
       <div className="mt-4 sm:mt-5 md:mt-6 flex justify-center px-3 sm:px-4 flex-shrink-0">
         <AnimatePresence>
-          {((step === 2 && isStep2SubQuestionValid()) || (step === 3 && isStepValid()) || (step === 5 && isStepValid())) && (
+          {((step === 2 && isStep2SubQuestionValid()) || (step === 5 && isStepValid())) && (
             <motion.button
               initial={{ opacity: 0, y: 10, scale: 0.95 }}
               animate={{ opacity: 1, y: 0, scale: 1 }}
