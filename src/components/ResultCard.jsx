@@ -1,19 +1,25 @@
 import React, { useEffect, useRef } from 'react';
 
-const ResultCard = ({ profile, scoreAlbert, scoreEugenia, userProfile, onComplete }) => {
+const ResultCard = ({ profile, scoreAlbert, scoreEugenia, percentAlbert, percentEugenia, userProfile, onComplete }) => {
   console.log('🎴 ResultCard rendu');
   console.log('🎴 ResultCard - onComplete disponible?', typeof onComplete === 'function');
   console.log('🎴 ResultCard - Scores:', { albert: scoreAlbert, eugenia: scoreEugenia });
+  console.log('🎴 ResultCard - Pourcentages:', { albert: percentAlbert, eugenia: percentEugenia });
   
   // Protection contre les sauvegardes multiples
   const hasSavedRef = useRef(false);
   
-  // Logique de score
-  const isEugenia = scoreEugenia > scoreAlbert;
-  const isNeutral = scoreEugenia === scoreAlbert;
+  // Utiliser les pourcentages fournis (calculés selon les spécifications)
+  // Si non fournis, calculer à partir des scores
+  const finalPercentAlbert = percentAlbert !== undefined ? percentAlbert : (scoreAlbert + scoreEugenia > 0 ? Math.round((scoreAlbert / (scoreAlbert + scoreEugenia)) * 100) : 50);
+  const finalPercentEugenia = percentEugenia !== undefined ? percentEugenia : (scoreAlbert + scoreEugenia > 0 ? Math.round((scoreEugenia / (scoreAlbert + scoreEugenia)) * 100) : 50);
+  
+  // Logique de score basée sur les pourcentages
+  const isEugenia = finalPercentEugenia > finalPercentAlbert;
+  const isNeutral = finalPercentEugenia === finalPercentAlbert;
 
-  // Utiliser le matchPercentage du profile si disponible, sinon calculer
-  const matchPercent = profile?.matchPercentage || (isNeutral ? 50 : (isEugenia ? Math.round((scoreEugenia / (scoreAlbert + scoreEugenia)) * 100) : Math.round((scoreAlbert / (scoreAlbert + scoreEugenia)) * 100)));
+  // Utiliser le matchPercentage du profile si disponible, sinon utiliser le pourcentage du profil gagnant
+  const matchPercent = profile?.matchPercentage || (isNeutral ? 50 : (isEugenia ? finalPercentEugenia : finalPercentAlbert));
 
   // Fonction pour déterminer le CTA selon la classe
   const getCallToAction = () => {
@@ -219,6 +225,11 @@ const ResultCard = ({ profile, scoreAlbert, scoreEugenia, userProfile, onComplet
             {matchPercent}%
           </span>
           <span className="text-[8px] sm:text-[9px] tracking-[0.3em] uppercase opacity-70">Compatibilité</span>
+          {/* Affichage des pourcentages détaillés */}
+          <div className="mt-2 sm:mt-3 text-[7px] sm:text-[8px] opacity-60 space-y-0.5">
+            <div>Profil Albert : {finalPercentAlbert}%</div>
+            <div>Profil Eugénia : {finalPercentEugenia}%</div>
+          </div>
         </div>
 
         {/* Bruit de texture subtil */}

@@ -15,6 +15,37 @@ import ResultCard from '../ResultCard';
 const QUESTIONS = [
   {
     id: 1,
+    scenario: 'OBJECTIF PROFESSIONNEL',
+    question: 'Quel est ton objectif professionnel ?',
+    choices: [
+      {
+        id: 'eugenia-entreprise',
+        text: 'Créer une entreprise',
+        icon: Rocket,
+        score: { albert: 0, eugenia: 3 }
+      },
+      {
+        id: 'albert-tech',
+        text: 'Travailler dans la tech/data',
+        icon: BarChart3,
+        score: { albert: 3, eugenia: 0 }
+      },
+      {
+        id: 'eugenia-voie',
+        text: 'Trouver ma voie',
+        icon: Star,
+        score: { albert: 0, eugenia: 1 }
+      },
+      {
+        id: 'autre',
+        text: 'Autre',
+        icon: Target,
+        score: { albert: 0, eugenia: 0 }
+      }
+    ]
+  },
+  {
+    id: 2,
     scenario: 'SCÉNARIO CRASH',
     question: 'Un bug critique survient 1h avant le lancement.',
     choices: [
@@ -22,18 +53,18 @@ const QUESTIONS = [
         id: 'eugenia',
         text: 'J\'improvise une solution créative pour sauver la démo.',
         icon: Sparkles,
-        score: { albert: 0, eugenia: 1 }
+        score: { albert: 0, eugenia: 2 }
       },
       {
         id: 'albert',
         text: 'J\'analyse les logs pour trouver la racine du problème.',
         icon: GitBranch,
-        score: { albert: 1, eugenia: 0 }
+        score: { albert: 2, eugenia: 0 }
       }
     ]
   },
   {
-    id: 2,
+    id: 3,
     scenario: 'VISUEL (INTERFACE)',
     question: 'Ton écran préféré ?',
     choices: [
@@ -42,19 +73,19 @@ const QUESTIONS = [
         text: 'Générateur d\'Art IA',
         icon: Sparkles,
         visual: 'gradient',
-        score: { albert: 0, eugenia: 1 }
+        score: { albert: 0, eugenia: 2 }
       },
       {
         id: 'albert',
         text: 'Dashboard Analytics',
         icon: Workflow,
         visual: 'chart',
-        score: { albert: 1, eugenia: 0 }
+        score: { albert: 2, eugenia: 0 }
       }
     ]
   },
   {
-    id: 3,
+    id: 4,
     scenario: 'DÉMARRAGE PROJET',
     question: 'Nouveau projet. Tu commences par...',
     choices: [
@@ -62,62 +93,69 @@ const QUESTIONS = [
         id: 'eugenia',
         text: 'Un prototype rapide (MVP) pour tester.',
         icon: Rocket,
-        score: { albert: 0, eugenia: 1 }
+        score: { albert: 0, eugenia: 2 }
       },
       {
         id: 'albert',
         text: 'Un plan structuré et des KPIs.',
         icon: Target,
-        score: { albert: 1, eugenia: 0 }
-      }
-    ]
-  },
-  {
-    id: 4,
-    scenario: 'GROWTH STRATEGY',
-    question: 'Faire grandir l\'app.',
-    choices: [
-      {
-        id: 'eugenia',
-        text: 'Campagne Virale TikTok.',
-        icon: TrendingUp,
-        score: { albert: 0, eugenia: 1 }
-      },
-      {
-        id: 'albert',
-        text: 'Optimisation de la Rétention.',
-        icon: BarChart3,
-        score: { albert: 1, eugenia: 0 }
+        score: { albert: 2, eugenia: 0 }
       }
     ]
   },
   {
     id: 5,
+    scenario: 'GROWTH STRATEGY',
+    question: 'Faire grandir l\'app.',
+    choices: [
+      {
+        id: 'eugenia',
+        text: 'Faire exploser la viralité',
+        icon: TrendingUp,
+        score: { albert: 0, eugenia: 2 }
+      },
+      {
+        id: 'albert',
+        text: 'Optimiser la rétention',
+        icon: BarChart3,
+        score: { albert: 2, eugenia: 0 }
+      }
+    ]
+  },
+  {
+    id: 6,
     scenario: 'MOTIVATION',
     question: 'Ce qui te fait lever le matin...',
     choices: [
       {
         id: 'eugenia',
-        text: 'Innover et créer l\'unique.',
+        text: 'Imaginer / créer / innover',
         icon: Star,
-        score: { albert: 0, eugenia: 1 }
+        score: { albert: 0, eugenia: 2 }
       },
       {
         id: 'albert',
-        text: 'Résoudre des problèmes complexes.',
+        text: 'Résoudre des problèmes complexes',
         icon: Workflow,
-        score: { albert: 1, eugenia: 0 }
+        score: { albert: 2, eugenia: 0 }
       }
     ]
   }
 ];
 
-// Fonction de calcul du badge final avec règles d'admission strictes
+// Fonction de calcul du badge final basée UNIQUEMENT sur les pourcentages du quiz
 const calculateFinalBadge = (gameScore, userProfile) => {
   const { albert: scoreAlbert, eugenia: scoreEugenia } = gameScore;
-  const isGameAlbert = scoreAlbert > scoreEugenia;
-  const isGameEugenia = scoreEugenia > scoreAlbert;
-  const isNeutral = scoreAlbert === scoreEugenia;
+  
+  // Calcul des pourcentages EXACTS selon les spécifications
+  const total = scoreAlbert + scoreEugenia;
+  const percentAlbert = total > 0 ? Math.round((scoreAlbert / total) * 100) : 50;
+  const percentEugenia = total > 0 ? Math.round((scoreEugenia / total) * 100) : 50;
+  
+  // Détermination du badge UNIQUEMENT basée sur les pourcentages
+  const isGameAlbert = percentAlbert > percentEugenia;
+  const isGameEugenia = percentEugenia > percentAlbert;
+  const isNeutral = percentAlbert === percentEugenia;
   
   // Conversion moyenne en nombre
   const getMoyenneValue = (moyenne) => {
@@ -356,31 +394,39 @@ const shuffleArray = (array) => {
   return shuffled;
 };
 
-// Mélanger les choix de chaque question pour éviter que l'ordre soit prévisible
+// Mélanger les choix de chaque question SAUF la question 1 (objectif professionnel) qui doit rester dans l'ordre
 const QUESTIONS_SHUFFLED = QUESTIONS.map(q => ({
   ...q,
-  choices: shuffleArray(q.choices)
+  choices: q.id === 1 ? q.choices : shuffleArray(q.choices) // Garder l'ordre pour la question 1
 }));
-
-import { useScoring } from '../../context/ScoringContext';
 
 export default function PhaseIA({ onComplete, userProfile }) {
   console.log('🎮 PhaseIA rendu - onComplete disponible?', typeof onComplete === 'function');
   console.log('🎮 PhaseIA - userProfile:', userProfile);
   
-  const { addScore, scoreAlbert: contextScoreAlbert, scoreEugenia: contextScoreEugenia } = useScoring();
+  // Variables globales pour le scoring du quiz uniquement
+  // Ne pas utiliser le context qui contient les scores de l'onboarding
   const [currentQuestion, setCurrentQuestion] = useState(0);
   const [gameScoreAlbert, setGameScoreAlbert] = useState(0);
   const [gameScoreEugenia, setGameScoreEugenia] = useState(0);
   const [showResult, setShowResult] = useState(false);
 
   const handleChoice = (choice) => {
-    // Mise à jour des scores locaux du jeu
-    setGameScoreAlbert(prev => prev + choice.score.albert);
-    setGameScoreEugenia(prev => prev + choice.score.eugenia);
+    // Points EXACTS selon les spécifications
+    const pointsAlbert = choice.score.albert;
+    const pointsEugenia = choice.score.eugenia;
     
-    // Ajouter aussi au context global
-    addScore(choice.score.albert, choice.score.eugenia, `Choix: ${choice.text}`);
+    // Mise à jour des variables globales du quiz uniquement
+    setGameScoreAlbert(prev => {
+      const newScore = prev + pointsAlbert;
+      console.log(`📊 Score Albert: ${prev} + ${pointsAlbert} = ${newScore} (Question ${currentQ.id}: ${choice.text})`);
+      return newScore;
+    });
+    setGameScoreEugenia(prev => {
+      const newScore = prev + pointsEugenia;
+      console.log(`📊 Score Eugenia: ${prev} + ${pointsEugenia} = ${newScore} (Question ${currentQ.id}: ${choice.text})`);
+      return newScore;
+    });
 
     // Passage immédiat à la question suivante ou résultat
     if (currentQuestion < QUESTIONS_SHUFFLED.length - 1) {
@@ -398,18 +444,40 @@ export default function PhaseIA({ onComplete, userProfile }) {
   const currentQ = QUESTIONS_SHUFFLED[currentQuestion];
 
   if (showResult) {
-    // Les scores du context incluent déjà les scores de l'onboarding
-    // Les scores du jeu (gameScoreAlbert/Eugenia) ont été ajoutés au context via addScore
-    // Donc le context contient déjà tout, on l'utilise directement
-    const totalScoreAlbert = contextScoreAlbert;
-    const totalScoreEugenia = contextScoreEugenia;
+    // Calcul des scores FINAUX selon les spécifications
+    // Utiliser UNIQUEMENT les scores du quiz PhaseIA (pas l'onboarding)
+    const totalScoreAlbert = gameScoreAlbert;
+    const totalScoreEugenia = gameScoreEugenia;
+    
+    // Calcul des pourcentages EXACTS selon les spécifications
+    const total = totalScoreAlbert + totalScoreEugenia;
+    const percentAlbert = total > 0 ? Math.round((totalScoreAlbert / total) * 100) : 50;
+    const percentEugenia = total > 0 ? Math.round((totalScoreEugenia / total) * 100) : 50;
+    
+    // Détermination du badge UNIQUEMENT basée sur les pourcentages
     const gameScore = { albert: totalScoreAlbert, eugenia: totalScoreEugenia };
     const profile = calculateFinalBadge(gameScore, userProfile);
     
+    // Forcer le badge selon les pourcentages
+    if (percentAlbert > percentEugenia) {
+      // Badge ALBERT
+      profile.badge = profile.badge.includes('ALBERT') || profile.badge.includes('ANALYST') ? profile.badge : 'ELITE ANALYST';
+    } else if (percentEugenia > percentAlbert) {
+      // Badge EUGENIA
+      profile.badge = profile.badge.includes('EUGENIA') || profile.badge.includes('MAKER') ? profile.badge : 'FUTURE MAKER';
+    } else {
+      // Égalité
+      profile.badge = 'EXPLORER';
+    }
+    
+    // Ajouter les pourcentages au profile pour l'affichage
+    profile.percentAlbert = percentAlbert;
+    profile.percentEugenia = percentEugenia;
+    
     console.log('🎮 PhaseIA - Affichage ResultCard');
-    console.log('🎮 PhaseIA - Scores du jeu (locaux):', { albert: gameScoreAlbert, eugenia: gameScoreEugenia });
-    console.log('🎮 PhaseIA - Scores du context (onboarding + jeu):', { albert: contextScoreAlbert, eugenia: contextScoreEugenia });
-    console.log('🎮 PhaseIA - Scores totaux utilisés:', { albert: totalScoreAlbert, eugenia: totalScoreEugenia });
+    console.log('🎮 PhaseIA - Scores du quiz (locaux):', { albert: gameScoreAlbert, eugenia: gameScoreEugenia });
+    console.log('🎮 PhaseIA - Pourcentages calculés:', { albert: percentAlbert, eugenia: percentEugenia });
+    console.log('🎮 PhaseIA - Total:', total);
     console.log('🎮 PhaseIA - Profile calculé:', profile);
     console.log('🎮 PhaseIA - onComplete passé à ResultCard?', typeof onComplete === 'function');
 
@@ -418,13 +486,16 @@ export default function PhaseIA({ onComplete, userProfile }) {
         profile={profile}
         scoreAlbert={totalScoreAlbert}
         scoreEugenia={totalScoreEugenia}
+        percentAlbert={percentAlbert}
+        percentEugenia={percentEugenia}
         userProfile={userProfile}
         onComplete={onComplete}
       />
     );
   }
 
-  const isQuestion2 = currentQ.id === 2;
+  const isQuestion2 = currentQ.id === 3; // Question 3 est la question visuelle
+  const isQuestion1 = currentQ.id === 1; // Question 1 a 4 choix
 
   return (
     <div className="w-full h-full flex flex-col bg-transparent">
@@ -455,7 +526,7 @@ export default function PhaseIA({ onComplete, userProfile }) {
               </h2>
 
             {/* Grille des choix - Design premium moderne */}
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6 w-full max-w-4xl mx-auto">
+            <div className={`grid ${isQuestion1 ? 'grid-cols-1 sm:grid-cols-2 md:grid-cols-4' : 'grid-cols-1 md:grid-cols-2'} gap-4 sm:gap-6 w-full max-w-4xl mx-auto`}>
               {currentQ.choices.map((choice, index) => {
                 const Icon = choice.icon;
                 // Couleurs basées sur l'index (pas sur le type de choix) pour éviter l'identification
@@ -492,9 +563,9 @@ export default function PhaseIA({ onComplete, userProfile }) {
                     onClick={() => handleChoice(choice)}
                     className={`
                       relative overflow-hidden
-                      h-[280px] sm:h-[320px] md:h-[340px]
+                      ${isQuestion1 ? 'h-[180px] sm:h-[200px]' : 'h-[280px] sm:h-[320px] md:h-[340px]'}
                       flex flex-col items-center justify-center text-center
-                      p-6 sm:p-8 md:p-10
+                      ${isQuestion1 ? 'p-4 sm:p-5' : 'p-6 sm:p-8 md:p-10'}
                       rounded-xl sm:rounded-2xl
                       transition-all duration-500 ease-out
                       group cursor-pointer
@@ -506,7 +577,7 @@ export default function PhaseIA({ onComplete, userProfile }) {
                       `}
                     `}
                   >
-                    {/* CARTE avec image de fond - Question 2 avec design premium */}
+                    {/* CARTE avec image de fond - Question 3 (visuelle) avec design premium */}
                     {isQuestion2 && choice.visual && (
                       <>
                         {/* Image de fond */}
@@ -562,8 +633,54 @@ export default function PhaseIA({ onComplete, userProfile }) {
                       </>
                     )}
 
+                    {/* Layout pour la question 1 (4 choix) - Design premium */}
+                    {isQuestion1 && (
+                      <>
+                        {/* Icône avec effet glow premium */}
+                        <motion.div 
+                          className={`
+                            relative w-12 h-12 sm:w-14 sm:h-14 ${colors.iconBg} 
+                            rounded-xl flex items-center justify-center mb-3 sm:mb-4
+                            transition-all duration-500
+                            group-hover:scale-110
+                            ${index % 2 === 0 
+                              ? 'shadow-[0_0_20px_rgba(139,92,246,0.3)]' 
+                              : 'shadow-[0_0_20px_rgba(16,185,129,0.3)]'}
+                          `}
+                          whileHover={{ rotate: [0, -5, 5, -5, 0] }}
+                          transition={{ duration: 0.5 }}
+                        >
+                          <Icon 
+                            className={`
+                              relative z-10 w-5 h-5 sm:w-6 sm:h-6 ${colors.iconText}
+                            `} 
+                            strokeWidth={2} 
+                          />
+                        </motion.div>
+                        
+                        {/* Texte avec effet premium */}
+                        <motion.h3 
+                          className={`
+                            text-sm sm:text-base font-semibold tracking-tight leading-relaxed px-2
+                            ${colors.textColor}
+                            relative
+                          `}
+                        >
+                          {choice.text}
+                          {/* Soulignement animé au hover */}
+                          <span className={`
+                            absolute bottom-0 left-0 right-0 h-0.5 
+                            ${index % 2 === 0 
+                              ? 'bg-gradient-to-r from-violet-400 to-indigo-400' 
+                              : 'bg-gradient-to-r from-emerald-400 to-teal-400'}
+                            transform scale-x-0 group-hover:scale-x-100 transition-transform duration-500 origin-center
+                          `} />
+                        </motion.h3>
+                      </>
+                    )}
+
                     {/* Layout standard pour les autres questions - Design premium */}
-                    {!isQuestion2 && (
+                    {!isQuestion2 && !isQuestion1 && (
                       <>
                         {/* Icône avec effet glow premium */}
                         <motion.div 
