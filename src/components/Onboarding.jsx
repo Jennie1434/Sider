@@ -839,11 +839,6 @@ export default function Onboarding({ onComplete }) {
             </motion.div>
           )}
 
-                </div>
-              </div>
-            </motion.div>
-          )}
-
           {/* ÉTAPE 4 : NIVEAU D'ANGLAIS */}
           {step === 4 && (
             <motion.div
