@@ -175,7 +175,6 @@ export default function Onboarding({ onComplete }) {
         addScore(-prevScore.albert, -prevScore.eugenia, `Classe: ${prevValue} (retiré)`);
       }
       addScore(score.albert, score.eugenia, `Classe: ${value}`);
-      // Ne pas passer automatiquement - l'utilisateur doit cliquer sur "Suivant"
     } else if (field === 'filiere' && SCORING_RULES.filiere[value]) {
       const score = SCORING_RULES.filiere[value];
       if (prevValue && SCORING_RULES.filiere[prevValue]) {
@@ -183,7 +182,6 @@ export default function Onboarding({ onComplete }) {
         addScore(-prevScore.albert, -prevScore.eugenia, `Filière: ${prevValue} (retiré)`);
       }
       addScore(score.albert, score.eugenia, `Filière: ${value}`);
-      // Ne pas passer automatiquement - l'utilisateur doit cliquer sur "Suivant"
     } else if (field === 'moyenne' && SCORING_RULES.moyenne[value]) {
       const score = SCORING_RULES.moyenne[value];
       if (prevValue && SCORING_RULES.moyenne[prevValue]) {
@@ -191,7 +189,6 @@ export default function Onboarding({ onComplete }) {
         addScore(-prevScore.albert, -prevScore.eugenia, `Moyenne: ${prevValue} (retiré)`);
       }
       addScore(score.albert, score.eugenia, `Moyenne: ${value}`);
-      // Ne pas passer automatiquement - l'utilisateur doit cliquer sur "Continuer"
     } else if (field === 'options' && SCORING_RULES.options[value]) {
       const score = SCORING_RULES.options[value];
       if (prevValue && SCORING_RULES.options[prevValue]) {
@@ -315,6 +312,59 @@ export default function Onboarding({ onComplete }) {
       }
     }
   }, [step]);
+
+  // Passage automatique à l'étape suivante quand une étape est complète
+  // SAUF pour l'étape 3 (spécialités) où on garde le bouton "Suivant"
+  useEffect(() => {
+    // Ne pas passer automatiquement si on est à l'étape 3 (spécialités)
+    if (step === 3) return;
+    
+    // Ne pas passer automatiquement si on est à la dernière étape
+    if (step === 5) return;
+    
+    // Gérer l'étape 2 (sous-questions)
+    if (step === 2) {
+      // Si toutes les sous-questions sont complétées, passer à l'étape suivante
+      if (formData.classe && formData.filiere && formData.moyenne) {
+        const timer = setTimeout(() => {
+          if (formData.classe === 'Seconde') {
+            setShowSecondeMessage(true);
+            setTimeout(() => {
+              setShowSecondeMessage(false);
+              setStep(4); // Passer directement à l'étape 4 (Anglais)
+              setStep2SubQuestion(0);
+            }, 1500);
+          } else {
+            setStep(3);
+            setStep2SubQuestion(0);
+          }
+        }, 800);
+        return () => clearTimeout(timer);
+      }
+      return;
+    }
+    
+    // Vérifier si l'étape actuelle est valide
+    let isValid = false;
+    if (step === 1) {
+      isValid = formData.prenom.trim() && formData.nom.trim() && formData.email.trim() && isValidEmail(formData.email);
+    } else if (step === 4) {
+      isValid = !!formData.englishLevel;
+    }
+    
+    // Si l'étape est valide, passer automatiquement à la suivante après un court délai
+    if (isValid) {
+      const timer = setTimeout(() => {
+        if (step === 1) {
+          setStep(2);
+        } else if (step === 4) {
+          setStep(5);
+        }
+      }, 800); // Délai de 800ms pour que l'utilisateur voie sa sélection
+      
+      return () => clearTimeout(timer);
+    }
+  }, [formData.prenom, formData.nom, formData.email, formData.englishLevel, formData.classe, formData.filiere, formData.moyenne, step]);
 
   const handleSubmit = () => {
     if (isStepValid()) {
@@ -873,9 +923,14 @@ export default function Onboarding({ onComplete }) {
       </AnimatePresence>
 
       {/* Bouton de navigation - Design moderne et visible */}
+      {/* Afficher le bouton seulement pour :
+          - Étape 2 (sous-questions)
+          - Étape 3 (spécialités - option supplémentaire possible)
+          - Étape 5 (soumission finale)
+      */}
       <div className="mt-4 sm:mt-5 md:mt-6 flex justify-center px-3 sm:px-4 flex-shrink-0">
         <AnimatePresence>
-          {(step === 2 ? isStep2SubQuestionValid() : isStepValid()) && (
+          {((step === 2 && isStep2SubQuestionValid()) || (step === 3 && isStepValid()) || (step === 5 && isStepValid())) && (
             <motion.button
               initial={{ opacity: 0, y: 10, scale: 0.95 }}
               animate={{ opacity: 1, y: 0, scale: 1 }}
@@ -889,6 +944,8 @@ export default function Onboarding({ onComplete }) {
                 ? '🚀 LANCER LA MISSION' 
                 : step === 2 && step2SubQuestion < 2
                 ? 'SUIVANT →'
+                : step === 3
+                ? 'CONTINUER →'
                 : 'CONTINUER →'
               }
             </motion.button>
