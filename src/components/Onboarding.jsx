@@ -449,19 +449,19 @@ export default function Onboarding({ onComplete }) {
 
   return (
     <div className="w-full h-full flex flex-col font-sans overflow-hidden">
-      {/* Barre de progression - Design moderne */}
-      <div className="mb-3 sm:mb-4 md:mb-6 flex-shrink-0">
-        <div className="flex items-center justify-between mb-2 sm:mb-3">
-          <span className="text-xs sm:text-sm text-slate-400 uppercase tracking-wider font-semibold">
+      {/* Barre de progression - Design professionnel */}
+      <div className="mb-4 sm:mb-5 md:mb-6 flex-shrink-0">
+        <div className="flex items-center justify-between mb-2.5 sm:mb-3">
+          <span className="text-[11px] sm:text-xs text-slate-400 uppercase tracking-[0.15em] font-medium" style={{ fontFamily: 'system-ui, -apple-system, sans-serif', letterSpacing: '0.15em' }}>
             Étape {step}/5
           </span>
-          <span className="text-xs sm:text-sm text-indigo-400 font-semibold">
+          <span className="text-[11px] sm:text-xs text-slate-300 font-medium" style={{ fontFamily: 'system-ui, -apple-system, sans-serif' }}>
             {Math.round((step / 5) * 100)}%
           </span>
         </div>
-        <div className="w-full bg-white/5 rounded-full h-1.5 sm:h-2 overflow-hidden shadow-inner">
+        <div className="w-full bg-white/[0.03] rounded-full h-1 sm:h-1.5 overflow-hidden">
           <motion.div
-            className="h-full bg-gradient-to-r from-indigo-500 via-violet-500 to-purple-500 shadow-lg shadow-indigo-500/50"
+            className="h-full bg-gradient-to-r from-slate-300 via-slate-200 to-white shadow-sm"
             initial={{ width: 0 }}
             animate={{ width: `${(step / 5) * 100}%` }}
             transition={{ duration: 0.5, ease: "easeOut" }}
@@ -495,7 +495,7 @@ export default function Onboarding({ onComplete }) {
                       transition={{ duration: 0.3, ease: "easeOut" }}
                       className="mb-3 sm:mb-4 md:mb-6 text-center"
                     >
-                      <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-white to-slate-400" style={{ fontFamily: 'Inter, sans-serif' }}>
+                      <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl text-white" style={{ fontFamily: 'system-ui, -apple-system, sans-serif', fontWeight: 300, letterSpacing: '-0.02em' }}>
                         Salut {formData.prenom} 👋
                       </h2>
                     </motion.div>
@@ -505,45 +505,48 @@ export default function Onboarding({ onComplete }) {
                 {/* Champs de formulaire - Design moderne */}
                 <div className="space-y-4 sm:space-y-5 md:space-y-6 max-w-md mx-auto w-full px-2 sm:px-4">
                   <div>
-                    <label className="block text-sm sm:text-base text-slate-300 mb-2 font-semibold">
+                    <label className="block text-xs sm:text-sm text-slate-400 mb-2 font-medium uppercase tracking-wider" style={{ fontFamily: 'system-ui, -apple-system, sans-serif', letterSpacing: '0.1em' }}>
                       Prénom *
                     </label>
                     <input
                       type="text"
                       value={formData.prenom}
                       onChange={(e) => handleInputChange('prenom', e.target.value)}
-                      className="w-full bg-white/5 border-2 border-white/20 rounded-xl p-3.5 sm:p-4 text-white text-base sm:text-lg focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500/50 focus:bg-white/10 transition-all outline-none placeholder:text-slate-500"
+                      className="w-full bg-white/[0.03] border border-white/10 rounded-lg p-3.5 sm:p-4 text-white text-base sm:text-lg focus:border-white/30 focus:bg-white/[0.05] transition-all outline-none placeholder:text-slate-500/60"
+                      style={{ fontFamily: 'system-ui, -apple-system, sans-serif', fontWeight: 300 }}
                       placeholder="Ton prénom"
                       autoFocus
                     />
                   </div>
 
                   <div>
-                    <label className="block text-sm sm:text-base text-slate-300 mb-2 font-semibold">
+                    <label className="block text-xs sm:text-sm text-slate-400 mb-2 font-medium uppercase tracking-wider" style={{ fontFamily: 'system-ui, -apple-system, sans-serif', letterSpacing: '0.1em' }}>
                       Nom *
                     </label>
                     <input
                       type="text"
                       value={formData.nom}
                       onChange={(e) => handleInputChange('nom', e.target.value)}
-                      className="w-full bg-white/5 border-2 border-white/20 rounded-xl p-3.5 sm:p-4 text-white text-base sm:text-lg focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500/50 focus:bg-white/10 transition-all outline-none placeholder:text-slate-500"
+                      className="w-full bg-white/[0.03] border border-white/10 rounded-lg p-3.5 sm:p-4 text-white text-base sm:text-lg focus:border-white/30 focus:bg-white/[0.05] transition-all outline-none placeholder:text-slate-500/60"
+                      style={{ fontFamily: 'system-ui, -apple-system, sans-serif', fontWeight: 300 }}
                       placeholder="Ton nom"
                     />
                   </div>
 
                   <div>
-                    <label className="block text-sm sm:text-base text-slate-300 mb-2 font-semibold">
+                    <label className="block text-xs sm:text-sm text-slate-400 mb-2 font-medium uppercase tracking-wider" style={{ fontFamily: 'system-ui, -apple-system, sans-serif', letterSpacing: '0.1em' }}>
                       Email *
                     </label>
                     <input
                       type="email"
                       value={formData.email}
                       onChange={(e) => handleInputChange('email', e.target.value)}
-                      className="w-full bg-white/5 border-2 border-white/20 rounded-xl p-3.5 sm:p-4 text-white text-base sm:text-lg focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500/50 focus:bg-white/10 transition-all outline-none placeholder:text-slate-500"
+                      className="w-full bg-white/[0.03] border border-white/10 rounded-lg p-3.5 sm:p-4 text-white text-base sm:text-lg focus:border-white/30 focus:bg-white/[0.05] transition-all outline-none placeholder:text-slate-500/60"
+                      style={{ fontFamily: 'system-ui, -apple-system, sans-serif', fontWeight: 300 }}
                       placeholder="ton.email@exemple.com"
                     />
                     {formData.email && !isValidEmail(formData.email) && (
-                      <p className="mt-2 text-xs text-red-400 font-medium">Email invalide</p>
+                      <p className="mt-2 text-xs text-red-400/80 font-medium" style={{ fontFamily: 'system-ui, -apple-system, sans-serif' }}>Email invalide</p>
                     )}
                   </div>
                 </div>
@@ -566,23 +569,23 @@ export default function Onboarding({ onComplete }) {
               <div className="flex-1 flex flex-col justify-center overflow-hidden px-2 sm:px-4">
                 <div className="max-w-2xl mx-auto w-full">
                   
-                  {/* Indicateur de progression pour l'étape 2 - Design moderne */}
-                  <div className="mb-4 sm:mb-6 text-center">
-                    <div className="flex items-center justify-center gap-2 sm:gap-3 mb-2">
+                  {/* Indicateur de progression pour l'étape 2 - Design professionnel */}
+                  <div className="mb-5 sm:mb-6 md:mb-8 text-center">
+                    <div className="flex items-center justify-center gap-2 sm:gap-3 mb-2.5">
                       {[0, 1, 2].map((index) => (
                         <div
                           key={index}
-                          className={`h-2 sm:h-2.5 rounded-full transition-all duration-300 ${
+                          className={`h-1.5 sm:h-2 rounded-full transition-all duration-300 ${
                             index < step2SubQuestion
-                              ? 'bg-indigo-500 w-8 sm:w-10 shadow-lg shadow-indigo-500/50'
+                              ? 'bg-white w-8 sm:w-10'
                               : index === step2SubQuestion
-                              ? 'bg-indigo-400 w-8 sm:w-10 shadow-lg shadow-indigo-400/50 ring-2 ring-indigo-300/50'
-                              : 'bg-white/10 w-2 sm:w-2.5'
+                              ? 'bg-white w-8 sm:w-10 ring-1 ring-white/30'
+                              : 'bg-white/20 w-2 sm:w-2.5'
                           }`}
                         />
                       ))}
                     </div>
-                    <p className="text-xs sm:text-sm text-slate-400 font-medium">
+                    <p className="text-[10px] sm:text-xs text-slate-400/80 font-medium uppercase tracking-wider" style={{ fontFamily: 'system-ui, -apple-system, sans-serif', letterSpacing: '0.1em' }}>
                       Question {step2SubQuestion + 1} sur 3
                     </p>
                   </div>
@@ -595,7 +598,7 @@ export default function Onboarding({ onComplete }) {
                       transition={{ duration: 0.3 }}
                       className="flex flex-col justify-center h-full"
                     >
-                      <h3 className="block text-lg sm:text-xl md:text-2xl lg:text-3xl text-white mb-4 sm:mb-6 md:mb-8 font-bold text-center tracking-tight">
+                      <h3 className="block text-xl sm:text-2xl md:text-3xl text-white mb-5 sm:mb-6 md:mb-8 text-center" style={{ fontFamily: 'system-ui, -apple-system, sans-serif', fontWeight: 300, letterSpacing: '-0.01em' }}>
                         Ta Classe Actuelle ?
                       </h3>
                       <div className="flex flex-wrap gap-2.5 sm:gap-3 md:gap-4 justify-center">
@@ -603,13 +606,14 @@ export default function Onboarding({ onComplete }) {
                           <motion.button
                             key={classe}
                             onClick={() => handleSelect('classe', classe)}
-                            whileHover={{ scale: 1.05, y: -2 }}
+                            whileHover={{ scale: 1.02, y: -1 }}
                             whileTap={{ scale: 0.98 }}
-                            className={`px-5 sm:px-7 md:px-9 py-3 sm:py-3.5 md:py-4 rounded-full text-sm sm:text-base md:text-lg font-semibold transition-all duration-300 touch-manipulation ${
+                            className={`px-5 sm:px-7 md:px-9 py-3 sm:py-3.5 md:py-4 rounded-lg text-sm sm:text-base md:text-lg transition-all duration-300 touch-manipulation ${
                               formData.classe === classe
-                                ? 'bg-gradient-to-r from-indigo-600 to-violet-600 border-2 border-indigo-400 text-white shadow-[0_0_25px_rgba(79,70,229,0.6)] scale-105'
-                                : 'bg-white/5 border-2 border-white/20 text-slate-300 hover:bg-white/10 hover:border-white/30 hover:text-white'
+                                ? 'bg-white text-[#0B0C15] border border-white/20 shadow-sm'
+                                : 'bg-white/[0.03] border border-white/10 text-slate-300 hover:bg-white/[0.06] hover:border-white/20 hover:text-white'
                             }`}
+                            style={{ fontFamily: 'system-ui, -apple-system, sans-serif', fontWeight: 400 }}
                           >
                             {classe}
                           </motion.button>
@@ -626,7 +630,7 @@ export default function Onboarding({ onComplete }) {
                       transition={{ duration: 0.3 }}
                       className="flex flex-col justify-center h-full"
                     >
-                      <h3 className="block text-lg sm:text-xl md:text-2xl lg:text-3xl text-white mb-4 sm:mb-6 md:mb-8 font-bold text-center tracking-tight">
+                      <h3 className="block text-xl sm:text-2xl md:text-3xl text-white mb-5 sm:mb-6 md:mb-8 text-center" style={{ fontFamily: 'system-ui, -apple-system, sans-serif', fontWeight: 300, letterSpacing: '-0.01em' }}>
                         Ta Filière / Type de Bac ?
                       </h3>
                       <div className="flex flex-wrap gap-2.5 sm:gap-3 md:gap-4 justify-center">
@@ -634,13 +638,14 @@ export default function Onboarding({ onComplete }) {
                           <motion.button
                             key={filiere}
                             onClick={() => handleSelect('filiere', filiere)}
-                            whileHover={{ scale: 1.05, y: -2 }}
+                            whileHover={{ scale: 1.02, y: -1 }}
                             whileTap={{ scale: 0.98 }}
-                            className={`px-5 sm:px-7 md:px-9 py-3 sm:py-3.5 md:py-4 rounded-full text-sm sm:text-base md:text-lg font-semibold transition-all duration-300 touch-manipulation ${
+                            className={`px-5 sm:px-7 md:px-9 py-3 sm:py-3.5 md:py-4 rounded-lg text-sm sm:text-base md:text-lg transition-all duration-300 touch-manipulation ${
                               formData.filiere === filiere
-                                ? 'bg-gradient-to-r from-indigo-600 to-violet-600 border-2 border-indigo-400 text-white shadow-[0_0_25px_rgba(79,70,229,0.6)] scale-105'
-                                : 'bg-white/5 border-2 border-white/20 text-slate-300 hover:bg-white/10 hover:border-white/30 hover:text-white'
+                                ? 'bg-white text-[#0B0C15] border border-white/20 shadow-sm'
+                                : 'bg-white/[0.03] border border-white/10 text-slate-300 hover:bg-white/[0.06] hover:border-white/20 hover:text-white'
                             }`}
+                            style={{ fontFamily: 'system-ui, -apple-system, sans-serif', fontWeight: 400 }}
                           >
                             {filiere}
                           </motion.button>
@@ -657,7 +662,7 @@ export default function Onboarding({ onComplete }) {
                       transition={{ duration: 0.3 }}
                       className="flex flex-col justify-center h-full"
                     >
-                      <h3 className="block text-lg sm:text-xl md:text-2xl lg:text-3xl text-white mb-4 sm:mb-6 md:mb-8 font-bold text-center tracking-tight">
+                      <h3 className="block text-xl sm:text-2xl md:text-3xl text-white mb-5 sm:mb-6 md:mb-8 text-center" style={{ fontFamily: 'system-ui, -apple-system, sans-serif', fontWeight: 300, letterSpacing: '-0.01em' }}>
                         Ta Moyenne Générale estimée ?
                       </h3>
                       <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-4 gap-3 sm:gap-4">
@@ -665,18 +670,19 @@ export default function Onboarding({ onComplete }) {
                           <motion.button
                             key={moyenne.id}
                             onClick={() => handleSelect('moyenne', moyenne.id)}
-                            whileHover={{ scale: 1.05, y: -3 }}
+                            whileHover={{ scale: 1.02, y: -1 }}
                             whileTap={{ scale: 0.98 }}
-                            className={`relative px-4 sm:px-5 md:px-6 py-4 sm:py-5 md:py-6 rounded-xl sm:rounded-2xl border-2 transition-all duration-300 text-center touch-manipulation ${
+                            className={`relative px-4 sm:px-5 md:px-6 py-4 sm:py-5 md:py-6 rounded-lg border transition-all duration-300 text-center touch-manipulation ${
                               formData.moyenne === moyenne.id
-                                ? 'border-indigo-400 bg-gradient-to-br from-indigo-600/30 to-violet-600/30 text-white shadow-[0_0_25px_rgba(79,70,229,0.5)] scale-105'
-                                : 'border-white/20 bg-white/5 text-slate-300 hover:border-white/30 hover:bg-white/10 hover:text-white'
+                                ? 'border-white/30 bg-white text-[#0B0C15] shadow-sm'
+                                : 'border-white/10 bg-white/[0.03] text-slate-300 hover:border-white/20 hover:bg-white/[0.06] hover:text-white'
                             }`}
+                            style={{ fontFamily: 'system-ui, -apple-system, sans-serif' }}
                           >
-                            <div className="text-xl sm:text-2xl md:text-3xl font-bold mb-1 sm:mb-2">
+                            <div className="text-xl sm:text-2xl md:text-3xl font-light mb-1 sm:mb-2" style={{ fontFamily: 'system-ui, -apple-system, sans-serif', fontWeight: 300 }}>
                               {moyenne.label}
                             </div>
-                            <div className="text-[10px] sm:text-xs text-slate-400 font-medium">
+                            <div className="text-[10px] sm:text-xs text-slate-400/80 font-medium uppercase tracking-wider" style={{ fontFamily: 'system-ui, -apple-system, sans-serif', letterSpacing: '0.05em' }}>
                               {moyenne.description}
                             </div>
                             {formData.moyenne === moyenne.id && (
@@ -730,9 +736,9 @@ export default function Onboarding({ onComplete }) {
                             initial={{ opacity: 0, y: -10 }}
                             animate={{ opacity: 1, y: 0 }}
                             exit={{ opacity: 0, y: -10 }}
-                            className="bg-amber-500/20 border border-amber-500/50 rounded-xl p-2 sm:p-3 text-center"
+                            className="bg-white/[0.05] border border-white/20 rounded-lg p-2.5 sm:p-3 text-center"
                           >
-                            <p className="text-[10px] sm:text-xs text-amber-300">
+                            <p className="text-[10px] sm:text-xs text-slate-300" style={{ fontFamily: 'system-ui, -apple-system, sans-serif', fontWeight: 400 }}>
                               En Terminale, on ne garde que 2 spés !
                             </p>
                           </motion.div>
@@ -741,7 +747,7 @@ export default function Onboarding({ onComplete }) {
 
                       {/* Spécialités principales ou Séries Techno/Pro - Design moderne */}
                       <div>
-                        <label className="block text-base sm:text-lg md:text-xl text-white mb-3 sm:mb-4 md:mb-6 font-bold text-center tracking-tight">
+                        <label className="block text-xl sm:text-2xl md:text-3xl text-white mb-4 sm:mb-5 md:mb-6 text-center" style={{ fontFamily: 'system-ui, -apple-system, sans-serif', fontWeight: 300, letterSpacing: '-0.01em' }}>
                           {isTechnoPro() 
                             ? 'Quelle est ta série ?'
                             : `Quelles sont tes spécialités ? (${getRequiredSpecsCount()} requises)`
@@ -756,16 +762,17 @@ export default function Onboarding({ onComplete }) {
                               <motion.button
                                 key={spec}
                                 onClick={() => handleSpecialiteToggle(spec)}
-                                whileHover={{ scale: isMaxReached ? 1 : 1.05, y: isMaxReached ? 0 : -2 }}
+                                whileHover={{ scale: isMaxReached ? 1 : 1.02, y: isMaxReached ? 0 : -1 }}
                                 whileTap={{ scale: 0.98 }}
                                 disabled={isMaxReached && !isTechnoPro()}
-                                className={`px-4 sm:px-5 md:px-7 py-2.5 sm:py-3 md:py-3.5 rounded-full text-xs sm:text-sm md:text-base font-semibold transition-all duration-300 touch-manipulation border-2 ${
+                                className={`px-4 sm:px-5 md:px-7 py-2.5 sm:py-3 md:py-3.5 rounded-lg text-xs sm:text-sm md:text-base transition-all duration-300 touch-manipulation border ${
                                   isSelected
-                                    ? 'bg-gradient-to-r from-indigo-600 to-violet-600 border-indigo-400 text-white shadow-[0_0_20px_rgba(79,70,229,0.5)] scale-105'
+                                    ? 'bg-white text-[#0B0C15] border-white/20 shadow-sm'
                                     : isMaxReached && !isTechnoPro()
-                                    ? 'bg-white/5 border-white/10 text-slate-500 cursor-not-allowed opacity-50'
-                                    : 'bg-white/5 border-white/20 text-slate-300 hover:bg-white/10 hover:border-white/30 hover:text-white'
+                                    ? 'bg-white/[0.02] border-white/5 text-slate-500/50 cursor-not-allowed opacity-40'
+                                    : 'bg-white/[0.03] border-white/10 text-slate-300 hover:bg-white/[0.06] hover:border-white/20 hover:text-white'
                                 }`}
+                                style={{ fontFamily: 'system-ui, -apple-system, sans-serif', fontWeight: 400 }}
                               >
                                 {spec}
                               </motion.button>
@@ -790,10 +797,10 @@ export default function Onboarding({ onComplete }) {
                       className="space-y-4 sm:space-y-5 md:space-y-6"
                     >
                       <div>
-                        <label className="block text-base sm:text-lg md:text-xl text-white mb-3 sm:mb-4 md:mb-6 font-bold text-center tracking-tight">
+                        <label className="block text-xl sm:text-2xl md:text-3xl text-white mb-4 sm:mb-5 md:mb-6 text-center" style={{ fontFamily: 'system-ui, -apple-system, sans-serif', fontWeight: 300, letterSpacing: '-0.01em' }}>
                           As-tu une Option ?
                         </label>
-                        <div className="flex flex-wrap gap-2 sm:gap-2.5 md:gap-3 justify-center mb-4">
+                        <div className="flex flex-wrap gap-2 sm:gap-2.5 md:gap-3 justify-center mb-5">
                           {OPTIONS.map((option) => {
                             const isSelected = formData.options === option;
                             const isMathOption = option === 'Maths Expertes' || option === 'Maths Complémentaire';
@@ -807,15 +814,14 @@ export default function Onboarding({ onComplete }) {
                                     setStep(4);
                                   }, 600);
                                 }}
-                                whileHover={{ scale: 1.05, y: -2 }}
+                                whileHover={{ scale: 1.02, y: -1 }}
                                 whileTap={{ scale: 0.98 }}
-                                className={`px-4 sm:px-5 md:px-7 py-2.5 sm:py-3 md:py-3.5 rounded-full text-xs sm:text-sm md:text-base font-semibold transition-all duration-300 touch-manipulation border-2 ${
+                                className={`px-4 sm:px-5 md:px-7 py-2.5 sm:py-3 md:py-3.5 rounded-lg text-xs sm:text-sm md:text-base transition-all duration-300 touch-manipulation border ${
                                   isSelected
-                                    ? isMathOption
-                                      ? 'bg-gradient-to-r from-amber-500/20 to-yellow-500/20 border-2 border-amber-500/70 text-white shadow-[0_0_15px_rgba(245,158,11,0.4)] scale-105'
-                                      : 'bg-violet-600 border-2 border-violet-400 text-white shadow-[0_0_20px_rgba(139,92,246,0.5)] scale-105'
-                                    : 'bg-white/5 border-2 border-white/20 text-slate-300 hover:bg-white/10 hover:border-white/30 hover:text-white'
+                                    ? 'bg-white text-[#0B0C15] border-white/20 shadow-sm'
+                                    : 'bg-white/[0.03] border-white/10 text-slate-300 hover:bg-white/[0.06] hover:border-white/20 hover:text-white'
                                 }`}
+                                style={{ fontFamily: 'system-ui, -apple-system, sans-serif', fontWeight: 400 }}
                               >
                                 {option}
                               </motion.button>
@@ -825,9 +831,10 @@ export default function Onboarding({ onComplete }) {
                         {/* Bouton "Pas d'option" */}
                         <motion.button
                           onClick={handleNoOption}
-                          whileHover={{ scale: 1.02, y: -2 }}
+                          whileHover={{ scale: 1.01, y: -1 }}
                           whileTap={{ scale: 0.98 }}
-                          className="w-full sm:w-auto mx-auto block px-6 sm:px-8 md:px-10 py-3 sm:py-3.5 md:py-4 rounded-xl sm:rounded-2xl bg-white/5 border-2 border-white/20 text-slate-300 hover:bg-white/10 hover:border-white/30 hover:text-white font-semibold text-sm sm:text-base md:text-lg transition-all duration-300 touch-manipulation"
+                          className="w-full sm:w-auto mx-auto block px-6 sm:px-8 md:px-10 py-3 sm:py-3.5 md:py-4 rounded-lg bg-white/[0.03] border border-white/10 text-slate-300 hover:bg-white/[0.06] hover:border-white/20 hover:text-white text-sm sm:text-base md:text-lg transition-all duration-300 touch-manipulation"
+                          style={{ fontFamily: 'system-ui, -apple-system, sans-serif', fontWeight: 400 }}
                         >
                           Pas d'option
                         </motion.button>
@@ -853,11 +860,11 @@ export default function Onboarding({ onComplete }) {
             >
               <div className="flex-1 flex flex-col justify-center overflow-hidden px-2 sm:px-4">
                 <div className="max-w-3xl mx-auto w-full">
-                  <div className="text-center mb-4 sm:mb-6 md:mb-8">
-                    <h2 className="text-lg sm:text-xl md:text-2xl lg:text-3xl text-white mb-2 sm:mb-3 font-bold tracking-tight">
+                  <div className="text-center mb-5 sm:mb-6 md:mb-8">
+                    <h2 className="text-xl sm:text-2xl md:text-3xl text-white mb-2 sm:mb-3" style={{ fontFamily: 'system-ui, -apple-system, sans-serif', fontWeight: 300, letterSpacing: '-0.01em' }}>
                       TON NIVEAU D'ANGLAIS ?
                     </h2>
-                    <p className="text-xs sm:text-sm text-slate-400 font-medium">
+                    <p className="text-xs sm:text-sm text-slate-400/80 font-medium uppercase tracking-wider" style={{ fontFamily: 'system-ui, -apple-system, sans-serif', letterSpacing: '0.1em' }}>
                       Critère important pour l'admission.
                     </p>
                   </div>
@@ -871,38 +878,39 @@ export default function Onboarding({ onComplete }) {
                           initial={{ opacity: 0, y: 20 }}
                           animate={{ opacity: 1, y: 0 }}
                           transition={{ delay: index * 0.1 }}
-                          whileHover={{ scale: 1.02, y: -4 }}
+                          whileHover={{ scale: 1.01, y: -1 }}
                           whileTap={{ scale: 0.98 }}
-                          className={`relative p-4 sm:p-5 md:p-6 rounded-xl sm:rounded-2xl border-2 transition-all duration-300 text-left touch-manipulation ${
+                          className={`relative p-4 sm:p-5 md:p-6 rounded-lg border transition-all duration-300 text-left touch-manipulation ${
                             isSelected
-                              ? 'bg-gradient-to-br from-indigo-600/30 to-violet-600/30 border-indigo-400 ring-2 ring-indigo-500/50 shadow-[0_0_25px_rgba(79,70,229,0.5)] scale-105'
-                              : 'bg-white/5 border-white/20 hover:bg-white/10 hover:border-white/30'
+                              ? 'bg-white text-[#0B0C15] border-white/30 shadow-sm'
+                              : 'bg-white/[0.03] border-white/10 hover:bg-white/[0.06] hover:border-white/20'
                           }`}
+                          style={{ fontFamily: 'system-ui, -apple-system, sans-serif' }}
                         >
                           <div className="flex items-start space-x-3 sm:space-x-4">
-                            <div className={`p-3 sm:p-3.5 md:p-4 rounded-xl flex-shrink-0 ${
+                            <div className={`p-3 sm:p-3.5 md:p-4 rounded-lg flex-shrink-0 ${
                               isSelected 
-                                ? 'bg-indigo-500/30 shadow-lg shadow-indigo-500/50' 
+                                ? 'bg-[#0B0C15]/10' 
                                 : 'bg-white/5'
                             }`}>
                               <Languages className={`w-5 h-5 sm:w-6 sm:h-6 md:w-7 md:h-7 ${
-                                isSelected ? 'text-indigo-300' : 'text-slate-400'
-                              }`} strokeWidth={2} />
+                                isSelected ? 'text-[#0B0C15]' : 'text-slate-400'
+                              }`} strokeWidth={1.5} />
                             </div>
                             <div className="flex-1 min-w-0">
-                              <div className={`text-base sm:text-lg md:text-xl font-bold mb-1 sm:mb-2 ${
-                                isSelected ? 'text-white' : 'text-slate-200'
-                              }`}>
+                              <div className={`text-base sm:text-lg md:text-xl mb-1 sm:mb-2 ${
+                                isSelected ? 'text-[#0B0C15]' : 'text-slate-200'
+                              }`} style={{ fontFamily: 'system-ui, -apple-system, sans-serif', fontWeight: 400 }}>
                                 {level.label}
                               </div>
-                              <div className={`text-xs sm:text-sm md:text-base font-semibold mb-1.5 sm:mb-2 ${
-                                isSelected ? 'text-indigo-300' : 'text-slate-400'
-                              }`}>
+                              <div className={`text-xs sm:text-sm md:text-base mb-1.5 sm:mb-2 ${
+                                isSelected ? 'text-[#0B0C15]/70' : 'text-slate-400'
+                              }`} style={{ fontFamily: 'system-ui, -apple-system, sans-serif', fontWeight: 400 }}>
                                 {level.subtitle}
                               </div>
                               <div className={`text-xs sm:text-sm ${
-                                isSelected ? 'text-slate-300' : 'text-slate-500'
-                              }`}>
+                                isSelected ? 'text-[#0B0C15]/60' : 'text-slate-500'
+                              }`} style={{ fontFamily: 'system-ui, -apple-system, sans-serif', fontWeight: 300 }}>
                                 {level.description}
                               </div>
                             </div>
@@ -911,7 +919,7 @@ export default function Onboarding({ onComplete }) {
                             <motion.div
                               initial={{ scale: 0 }}
                               animate={{ scale: 1 }}
-                              className="absolute top-3 right-3 w-5 h-5 rounded-full bg-indigo-500 flex items-center justify-center"
+                              className="absolute top-3 right-3 w-5 h-5 rounded-full bg-[#0B0C15] flex items-center justify-center"
                             >
                               <svg className="w-3 h-3 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M5 13l4 4L19 7" />
@@ -941,10 +949,10 @@ export default function Onboarding({ onComplete }) {
             >
               <div className="flex-1 flex flex-col justify-center overflow-hidden px-2 sm:px-4">
                 <div className="max-w-2xl mx-auto w-full">
-                  <label className="block text-lg sm:text-xl md:text-2xl lg:text-3xl text-white mb-4 sm:mb-6 md:mb-8 font-bold text-center tracking-tight">
+                  <label className="block text-xl sm:text-2xl md:text-3xl text-white mb-5 sm:mb-6 md:mb-8 text-center" style={{ fontFamily: 'system-ui, -apple-system, sans-serif', fontWeight: 300, letterSpacing: '-0.01em' }}>
                     Ton but ultime ?
                   </label>
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-5">
                     {OBJECTIFS.map((obj, index) => {
                       const Icon = obj.icon;
                       const isSelected = formData.objectif === obj.id;
@@ -955,27 +963,28 @@ export default function Onboarding({ onComplete }) {
                           initial={{ opacity: 0, y: 20 }}
                           animate={{ opacity: 1, y: 0 }}
                           transition={{ delay: index * 0.1 }}
-                          whileHover={{ scale: 1.02, y: -4 }}
+                          whileHover={{ scale: 1.01, y: -1 }}
                           whileTap={{ scale: 0.98 }}
-                          className={`relative p-5 sm:p-6 md:p-8 lg:p-10 rounded-xl sm:rounded-2xl border-2 transition-all duration-300 touch-manipulation ${
+                          className={`relative p-5 sm:p-6 md:p-8 lg:p-10 rounded-lg border transition-all duration-300 touch-manipulation ${
                             isSelected
-                              ? 'border-indigo-400 bg-gradient-to-br from-indigo-600/30 to-violet-600/30 shadow-[0_0_25px_rgba(79,70,229,0.5)] scale-105 ring-2 ring-indigo-500/50'
-                              : 'border-white/20 bg-white/5 hover:border-white/30 hover:bg-white/10'
+                              ? 'bg-white text-[#0B0C15] border-white/30 shadow-sm'
+                              : 'bg-white/[0.03] border-white/10 hover:bg-white/[0.06] hover:border-white/20'
                           }`}
+                          style={{ fontFamily: 'system-ui, -apple-system, sans-serif' }}
                         >
                           <div className="flex flex-col items-center text-center space-y-3 sm:space-y-4 md:space-y-5">
-                            <div className={`p-4 sm:p-5 md:p-6 rounded-xl sm:rounded-2xl ${
+                            <div className={`p-4 sm:p-5 md:p-6 rounded-lg ${
                               isSelected 
-                                ? 'bg-indigo-500/30 shadow-lg shadow-indigo-500/50' 
+                                ? 'bg-[#0B0C15]/10' 
                                 : 'bg-white/5'
                             }`}>
                               <Icon className={`w-7 h-7 sm:w-8 sm:h-8 md:w-10 md:h-10 ${
-                                isSelected ? 'text-indigo-300' : 'text-slate-400'
-                              }`} strokeWidth={2} />
+                                isSelected ? 'text-[#0B0C15]' : 'text-slate-400'
+                              }`} strokeWidth={1.5} />
                             </div>
-                            <span className={`text-sm sm:text-base md:text-lg font-bold ${
-                              isSelected ? 'text-white' : 'text-slate-300'
-                            }`}>
+                            <span className={`text-sm sm:text-base md:text-lg ${
+                              isSelected ? 'text-[#0B0C15]' : 'text-slate-300'
+                            }`} style={{ fontFamily: 'system-ui, -apple-system, sans-serif', fontWeight: 400 }}>
                               {obj.label}
                             </span>
                           </div>
@@ -1024,7 +1033,8 @@ export default function Onboarding({ onComplete }) {
               whileHover={{ scale: 1.02, y: -2 }}
               whileTap={{ scale: 0.98 }}
               onClick={handleSubmit}
-              className="w-full sm:w-auto px-6 sm:px-8 md:px-10 py-3 sm:py-3.5 md:py-4 rounded-xl sm:rounded-2xl bg-gradient-to-r from-indigo-600 via-violet-600 to-purple-600 text-white font-bold text-sm sm:text-base hover:from-indigo-500 hover:via-violet-500 hover:to-purple-500 active:from-indigo-700 active:via-violet-700 active:to-purple-700 transition-all duration-200 shadow-xl shadow-indigo-500/30 hover:shadow-2xl hover:shadow-indigo-500/50 touch-manipulation"
+              className="w-full sm:w-auto px-6 sm:px-8 md:px-10 py-3 sm:py-3.5 md:py-4 rounded-lg bg-white text-[#0B0C15] hover:bg-white/95 active:bg-white/90 transition-all duration-200 shadow-sm hover:shadow-md touch-manipulation"
+              style={{ fontFamily: 'system-ui, -apple-system, sans-serif', fontWeight: 400, letterSpacing: '0.05em' }}
             >
               🚀 LANCER LA MISSION
             </motion.button>
