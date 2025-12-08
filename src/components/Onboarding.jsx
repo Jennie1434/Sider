@@ -94,36 +94,22 @@ export default function Onboarding({ onComplete }) {
     return emailRegex.test(email);
   };
 
-  // Fonction pour déterminer le nombre de spécialités requis selon la classe
-  const getRequiredSpecsCount = () => {
-    if (formData.classe === 'Seconde') return 0; // Skip
-    // Si filière techno/pro, 1 série requise
-    if (isTechnoPro()) return 1;
-    if (formData.classe === 'Première') return 3;
-    if (formData.classe === 'Terminale' || formData.classe === 'Étudiant (Bac+)' || formData.classe === 'En réorientation') return 2;
-    return 2; // Par défaut
-  };
-
-  // Fonction pour déterminer si on doit afficher les séries techno/pro
+  // Fonction pour déterminer si c'est une filière techno/pro
   const isTechnoPro = () => {
     return formData.filiere === 'Technologique (STI2D, STMG...)' || formData.filiere === 'Professionnelle';
   };
 
-  // Validation des étapes
-  // Vérifier si la sous-question actuelle de l'étape 2 est valide
-  const isStep2SubQuestionValid = () => {
-    switch (step2SubQuestion) {
-      case 0: // Classe
-        return !!formData.classe;
-      case 1: // Filière
-        return !!formData.filiere;
-      case 2: // Moyenne
-        return !!formData.moyenne;
-      default:
-        return false;
+  // Fonction pour obtenir le nombre de spécialités requises
+  const getRequiredSpecsCount = () => {
+    if (formData.classe === 'Terminale' || formData.classe === 'Étudiant (Bac+)' || formData.classe === 'En réorientation') {
+      return 2;
+    } else if (formData.classe === 'Première') {
+      return 3;
     }
+    return 0;
   };
 
+  // Validation des étapes
   const isStepValid = () => {
     switch (step) {
       case 1:
@@ -159,7 +145,6 @@ export default function Onboarding({ onComplete }) {
     // Ajouter des points selon les règles de scoring
     if (field === 'classe' && SCORING_RULES.classe[value]) {
       const score = SCORING_RULES.classe[value];
-      // Retirer les points de l'ancienne valeur si elle existait
       if (prevValue && SCORING_RULES.classe[prevValue]) {
         const prevScore = SCORING_RULES.classe[prevValue];
         addScore(-prevScore.albert, -prevScore.eugenia, `Classe: ${prevValue} (retiré)`);
@@ -179,13 +164,6 @@ export default function Onboarding({ onComplete }) {
         addScore(-prevScore.albert, -prevScore.eugenia, `Moyenne: ${prevValue} (retiré)`);
       }
       addScore(score.albert, score.eugenia, `Moyenne: ${value}`);
-    } else if (field === 'options' && SCORING_RULES.options[value]) {
-      const score = SCORING_RULES.options[value];
-      if (prevValue && SCORING_RULES.options[prevValue]) {
-        const prevScore = SCORING_RULES.options[prevValue];
-        addScore(-prevScore.albert, -prevScore.eugenia, `Option: ${prevValue} (retiré)`);
-      }
-      addScore(score.albert, score.eugenia, `Option: ${value}`);
     } else if (field === 'englishLevel' && SCORING_RULES.anglais[value]) {
       const score = SCORING_RULES.anglais[value];
       if (prevValue && SCORING_RULES.anglais[prevValue]) {
@@ -193,118 +171,76 @@ export default function Onboarding({ onComplete }) {
         addScore(-prevScore.albert, -prevScore.eugenia, `Anglais: ${prevValue} (retiré)`);
       }
       addScore(score.albert, score.eugenia, `Anglais: ${value}`);
+    }
   };
 
   const handleSpecialiteToggle = (spec) => {
     setFormData(prev => {
       const current = prev.spes;
-      const requiredCount = getRequiredSpecsCount();
+      const isSelected = current.includes(spec);
       
-      // Pour techno/pro, sélection unique (remplacer la sélection précédente)
-      if (isTechnoPro()) {
-        if (current.includes(spec)) {
-          // Désélectionner si déjà sélectionné
-          const score = getSpecialiteScore(spec);
-          addScore(-score.albert, -score.eugenia, `Spécialité: ${spec} (retiré)`);
-          return { ...prev, spes: [] };
-        } else {
-          // Retirer les points de l'ancienne spécialité si elle existait
-          if (current.length > 0) {
-            const prevSpec = current[0];
-            const prevScore = getSpecialiteScore(prevSpec);
-            addScore(-prevScore.albert, -prevScore.eugenia, `Spécialité: ${prevSpec} (retiré)`);
-          }
-          // Sélectionner (remplacer toute sélection précédente)
-          const score = getSpecialiteScore(spec);
-          addScore(score.albert, score.eugenia, `Spécialité: ${spec}`);
-          return { ...prev, spes: [spec] };
-        }
-      }
-      
-      // Pour les autres cas (Générale)
-      if (current.includes(spec)) {
-        // Désélectionner
+      if (isSelected) {
+        // Retirer la spécialité
+        const newSpes = current.filter(s => s !== spec);
         const score = getSpecialiteScore(spec);
         addScore(-score.albert, -score.eugenia, `Spécialité: ${spec} (retiré)`);
-        const newSpes = current.filter(s => s !== spec);
-        // Si on revient en dessous du nombre requis, revenir à la section spes
-        if (newSpes.length < requiredCount) {
-          setStep3SubSection('spes');
-        }
-        return { ...prev, spes: newSpes };
-      } else if (current.length < requiredCount) {
-        // Sélectionner si on n'a pas atteint le max
-        const score = getSpecialiteScore(spec);
-        addScore(score.albert, score.eugenia, `Spécialité: ${spec}`);
-        const newSpes = [...current, spec];
-        // Si on a atteint le nombre requis, passer automatiquement à la section options
-        if (newSpes.length === requiredCount && !isTechnoPro()) {
-          setTimeout(() => {
-            // Vérifier si l'utilisateur peut avoir une option
-            if (formData.classe === 'Terminale' || formData.classe === 'Étudiant (Bac+)' || formData.classe === 'En réorientation') {
-              setStep3SubSection('options');
-            } else {
-              // Sinon, passer directement à l'étape suivante
-              setStep(4);
-            }
-          }, 600);
-        }
         return { ...prev, spes: newSpes };
       } else {
-        // Afficher l'alerte si on essaie de dépasser le max (Terminale)
-        if (formData.classe === 'Terminale' || formData.classe === 'Étudiant (Bac+)' || formData.classe === 'En réorientation') {
-          setShowAlert(true);
-          setTimeout(() => setShowAlert(false), 3000);
+        // Ajouter la spécialité si on n'a pas atteint le maximum
+        const requiredCount = getRequiredSpecsCount();
+        if (current.length < requiredCount || isTechnoPro()) {
+          const newSpes = [...current, spec];
+          const score = getSpecialiteScore(spec);
+          addScore(score.albert, score.eugenia, `Spécialité: ${spec}`);
+          
+          // Si on a atteint le nombre requis et qu'on n'est pas en techno/pro, passer à la section options
+          if (newSpes.length === requiredCount && !isTechnoPro()) {
+            setTimeout(() => {
+              // Vérifier si l'utilisateur peut avoir une option
+              if (formData.classe === 'Terminale' || formData.classe === 'Étudiant (Bac+)' || formData.classe === 'En réorientation') {
+                setStep3SubSection('options');
+              } else {
+                // Sinon, passer directement à l'étape suivante
+                setStep(4);
+              }
+            }, 600);
+          }
+          return { ...prev, spes: newSpes };
+        } else {
+          // Afficher l'alerte si on essaie de dépasser le max (Terminale)
+          if (formData.classe === 'Terminale' || formData.classe === 'Étudiant (Bac+)' || formData.classe === 'En réorientation') {
+            setShowAlert(true);
+            setTimeout(() => setShowAlert(false), 3000);
+          }
+          return prev;
         }
-        return prev;
       }
     });
   };
 
+  const handleOptionSelect = (option) => {
+    setFormData(prev => ({ ...prev, options: option }));
+    
+    // Ajouter des points selon les règles de scoring
+    if (SCORING_RULES.options[option]) {
+      const score = SCORING_RULES.options[option];
+      const prevOption = prev.options;
+      if (prevOption && SCORING_RULES.options[prevOption]) {
+        const prevScore = SCORING_RULES.options[prevOption];
+        addScore(-prevScore.albert, -prevScore.eugenia, `Option: ${prevOption} (retiré)`);
+      }
+      addScore(score.albert, score.eugenia, `Option: ${option}`);
+    }
+  };
+
   const handleNoOption = () => {
-    setFormData(prev => ({ ...prev, options: '' }));
+    setFormData(prev => ({ ...prev, options: 'Aucune' }));
     // Passer automatiquement à l'étape suivante
     setTimeout(() => {
       setStep(4);
-    }, 300);
+    }, 600);
   };
 
-  const handleOptionSelect = (option) => {
-    setFormData(prev => ({
-      ...prev,
-      options: prev.options === option ? '' : option
-    }));
-  };
-
-  const handleNext = () => {
-    if (step === 2) {
-      // Si on est à l'étape 2, gérer les sous-questions
-      if (step2SubQuestion < 2) {
-        // Passer à la sous-question suivante
-        setStep2SubQuestion(prev => prev + 1);
-      } else {
-        // Toutes les sous-questions sont complétées, passer à l'étape suivante
-        if (formData.classe === 'Seconde') {
-          setShowSecondeMessage(true);
-          setTimeout(() => {
-            setShowSecondeMessage(false);
-            setStep(4); // Passer directement à l'étape 4 (Anglais)
-            setStep2SubQuestion(0); // Réinitialiser pour la prochaine fois
-          }, 1500);
-        } else {
-          setStep(3);
-          setStep2SubQuestion(0); // Réinitialiser pour la prochaine fois
-        }
-      }
-    } else if (isStepValid() && step < 4) {
-      setStep(prev => prev + 1);
-      // Réinitialiser step2SubQuestion si on quitte l'étape 2
-      if (step === 2) {
-        setStep2SubQuestion(0);
-      }
-    }
-  };
-  
   // Réinitialiser step2SubQuestion quand on entre dans l'étape 2
   useEffect(() => {
     if (step === 2) {
@@ -382,7 +318,7 @@ export default function Onboarding({ onComplete }) {
     if (step === 2) return;
     
     // Ne pas passer automatiquement si on est à la dernière étape
-    if (step === 5) return;
+    if (step === 4) return;
     
     // Vérifier si l'étape actuelle est valide
     let isValid = false;
@@ -433,7 +369,7 @@ export default function Onboarding({ onComplete }) {
       <div className="mb-4 sm:mb-5 md:mb-6 flex-shrink-0">
         <div className="flex items-center justify-between mb-2.5 sm:mb-3">
           <span className="text-[11px] sm:text-xs text-slate-400 uppercase tracking-[0.15em] font-medium" style={{ fontFamily: 'system-ui, -apple-system, sans-serif', letterSpacing: '0.15em' }}>
-            Étape {step}/5
+            Étape {step}/4
           </span>
           <span className="text-[11px] sm:text-xs text-slate-300 font-medium" style={{ fontFamily: 'system-ui, -apple-system, sans-serif' }}>
             {Math.round((step / 4) * 100)}%
