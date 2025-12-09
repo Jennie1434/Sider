@@ -375,18 +375,15 @@ function AppContent() {
                     />
                   </motion.button>
                   
-                  {/* Bouton admin caché - accessible uniquement via code secret ou URL avec code */}
-                  {/* Pour accéder : utiliser l'URL avec ?admin_code=CODE_SECRET ou appuyer sur Ctrl+Shift+A */}
-                  {isAdminAuthenticated() && (
-                    <motion.button 
-                      onClick={() => setStep('admin')}
-                      whileHover={{ scale: 1.02 }}
-                      whileTap={{ scale: 0.98 }}
-                      className="bg-white/5 text-white hover:bg-white/10 active:bg-white/15 border-2 border-white/20 hover:border-white/30 transition-all px-4 sm:px-6 md:px-8 py-3 sm:py-3.5 md:py-4 rounded-xl font-semibold text-sm sm:text-base w-full touch-manipulation backdrop-blur-sm"
-                    >
-                      📊 ACCÈS ADMIN
-                    </motion.button>
-                  )}
+                  {/* Bouton admin - toujours visible */}
+                  <motion.button 
+                    onClick={handleAdminAccess}
+                    whileHover={{ scale: 1.02 }}
+                    whileTap={{ scale: 0.98 }}
+                    className="bg-white/5 text-white hover:bg-white/10 active:bg-white/15 border-2 border-white/20 hover:border-white/30 transition-all px-4 sm:px-6 md:px-8 py-3 sm:py-3.5 md:py-4 rounded-xl font-semibold text-sm sm:text-base w-full touch-manipulation backdrop-blur-sm"
+                  >
+                    📊 ACCÈS ADMIN
+                  </motion.button>
                 </motion.div>
               </div>
             </motion.div>
